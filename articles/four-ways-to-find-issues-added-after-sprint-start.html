@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four ways to find issues added after sprint start in Jira Cloud (2026) | Sprint Ledger</title>
+<meta name="description" content="The Sprint Report, an automation rule with a custom field, Appfire's JQL Search Extensions and Sprint Ledger: what each can and cannot do, and when each is enough.">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.35rem; margin-top: 2rem; }
+  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
+  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; }
+  a { color: #0052cc; }
+  nav { font-size: 0.9rem; color: #6b778c; }
+  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<nav><a href="../">Sprint Ledger</a> / Articles</nav>
+<h1>Four ways to find issues added after sprint start in Jira Cloud (2026)</h1>
+<p class="byline">Damian Plamenov Yordanov, 7 September 2026</p>
+<p>Every scrum master has asked it at some point in a review: <em>what got added after we committed?</em> Jira knows the answer, because every change to the Sprint field is in the issue history, but for eight years it has only shown it one way: the asterisk next to an issue in the Sprint Report. The request to make it a JQL query, <a href="https://jira.atlassian.com/browse/JRACLOUD-75868">JRACLOUD-75868</a>, has more than 1,400 votes and is still "Gathering Interest". Here are the four ways teams answer the question today, what each one can and cannot do, and when each is enough. Disclosure up front: I am building the fourth one.</p>
+<h2>1. Read the Sprint Report by hand</h2>
+<p>Open the board, Reports, Sprint Report, pick the sprint. Issues added after the sprint started carry an asterisk; the footnote says so. "Issues Removed From Sprint" is its own section at the bottom, and the completed and not-completed lists are above it.</p>
+<p>It is accurate, it is retroactive (every closed sprint is there), and it costs nothing. What it cannot do: it is a page, not a query. You cannot filter on it, sort by it, put it in a dashboard gadget, trigger automation from it or export it without copy-and-paste. For one sprint in a retrospective it is fine. For "how much scope creep did we have per sprint this quarter" it means opening twelve reports and counting asterisks.</p>
+<p>Also note two details that trip people up: subtasks are excluded, and an issue that was in the sprint at start, removed and put back is <em>not</em> asterisked, because Jira compares the start state with the end state rather than counting events.</p>
+<h2>2. An automation rule and a custom field</h2>
+<p>The workaround people post in the ticket thread: stamp each issue when it enters an active sprint and query the stamp.</p>
+<ul>
+<li>Create a date-time custom field, say "Added to active sprint", and optionally a single-select "Sprint scope" with the values Committed and Added after start.</li>
+<li>Rule A, on the trigger <strong>Sprint started</strong>: branch over the sprint's issues (JQL <code>sprint = {{sprint.id}}</code>) and set "Sprint scope" to Committed.</li>
+<li>Rule B, on the trigger <strong>Field value changed</strong> for the Sprint field: condition <code>sprint in openSprints()</code> and "Sprint scope" is not Committed; action: set "Sprint scope" to Added after start and "Added to active sprint" to <code>{{now}}</code>.</li>
+<li>Query: <code>sprint in openSprints() AND "Sprint scope" = "Added after start"</code>, or by date with the custom field.</li>
+</ul>
+<p>It works, and it is the right answer if you only care about the current sprint from now on. The limits: it is not retroactive (nothing before the rule existed is stamped), a single field per issue cannot hold the history of an issue that rolls over three sprints (rule A overwrites it at the next sprint start, so "added after start" in sprint 41 becomes "committed" in sprint 42), removals need a third rule and another field, and every rule run counts against the site's monthly automation allowance (100 runs a month on Free, 1,700 site-wide on Standard, 1,000 per user on Premium at the time of writing). Expect an afternoon to set up and a support conversation every time someone asks why the numbers differ from the Sprint Report.</p>
+<h2>3. A JQL extension app</h2>
+<p>JQL Search Extensions (Appfire) adds functions that Jira does not have, and one of them is this: <code>issue in addedToSprintAfterStart("ACME board", "ACME Sprint 5")</code>, with the board first and the sprint optional (the active sprint by default). It is retroactive, it works wherever JQL works, and it is a mature product with thousands of installs. If your site already pays for it, this is the answer and you can stop reading.</p>
+<p>If it does not: the function covers the "added" half only (there is no "removed", "committed" or "carried over"), the result is a query rather than a column you can sort or show in a gadget, and the app is a large toolkit priced accordingly (list price is roughly $175 a month for a 100-user site at the time of writing; check the listing). Buying it for one function is like buying a workshop for one screwdriver.</p>
+<h2>4. Sprint Ledger (the one I am building)</h2>
+<p>Sprint Ledger is a Forge app that does one thing: it reconstructs the membership history of every sprint on the site from the changelog, keeps it current from Jira's events, and exposes it three ways.</p>
+<ul>
+<li><strong>JQL functions</strong>: <code>addedAfterSprintStart(sprint?)</code>, <code>removedFromSprint(sprint?)</code>, <code>committedTo(sprint?)</code>, <code>completedIn(sprint?)</code>, <code>carriedOverFrom(sprint?)</code> and <code>carriedOver(n)</code>. Without an argument they mean the active sprints. They work in filters, boards, dashboards, automation and subscriptions.</li>
+<li><strong>Read-only fields</strong>: Sprint scope (Committed, Added after start, Removed, Added then removed), Added to sprint, Removed from sprint, Sprints carried, Original sprint, Sprint start, Sprint end. They show as columns, sort, and are usable in JQL like <code>"Sprint start (Ledger)" &gt;= 2026-07-01</code>.</li>
+<li><strong>A gadget and CSV export</strong>: committed, added, removed, completed, carried, say/do and scope change per sprint, in issues or story points, with an issue-level export that says who added or removed what and when.</li>
+</ul>
+<p>It is retroactive for every sprint the site has run, it follows the Sprint Report's definitions (so the numbers match, and the differences are documented), and it runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced so that a 100-user site pays about $50 a month and sites with up to 10 users pay nothing.</p>
+<h2>Which one is enough?</h2>
+<table border="1" cellpadding="6" style="border-collapse:collapse">
+<thead><tr><th></th><th>Sprint Report</th><th>Automation rule</th><th>JQL Search Extensions</th><th>Sprint Ledger</th></tr></thead>
+<tbody>
+<tr><td>Added after start</td><td>asterisk on a page</td><td>current sprint onward</td><td>JQL, per board and sprint</td><td>JQL, column, gadget, CSV</td></tr>
+<tr><td>Removed from sprint</td><td>section on a page</td><td>third rule and field</td><td>no</td><td>yes</td></tr>
+<tr><td>Committed, completed, carried over</td><td>lists on a page</td><td>no</td><td>no</td><td>yes</td></tr>
+<tr><td>Retroactive for closed sprints</td><td>yes</td><td>no</td><td>yes</td><td>yes</td></tr>
+<tr><td>Sortable column, gadget, export</td><td>no</td><td>column only</td><td>no</td><td>yes</td></tr>
+<tr><td>Automation and subscriptions</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>Cost for 100 users</td><td>free</td><td>free (rule runs)</td><td>about $175 a month</td><td>about $50 a month</td></tr>
+<tr><td>Setup</td><td>none</td><td>an afternoon</td><td>install</td><td>install and wait for the backfill</td></tr>
+</tbody></table>
+<p>If you look at one sprint at a time, the Sprint Report is enough. If you only need the active sprint from today on and are comfortable with automation, the rule is enough. If you already own JQL Search Extensions, use it. If you want the whole history as queries and columns, or you report across teams, that is the gap Sprint Ledger is meant to fill, and I would like beta sites that will tell me where it is wrong: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
+<p>Questions and corrections about the first three methods are welcome in the comments; I will keep the table current.</p>
+<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. Corrections: <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>.</footer>
+</body>
+</html>
