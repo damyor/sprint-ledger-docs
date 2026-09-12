@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started with Sprint Ledger (private beta) | Sprint Ledger</title>
+<meta name="description" content="Install Sprint Ledger, watch the first reconstruction, and query what was added after sprint start, removed, committed, completed and carried over, as JQL and as columns.">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.35rem; margin-top: 2.2rem; }
+  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
+  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: #f4f5f7; padding: 0.8rem 1rem; border-radius: 3px; overflow-x: auto; font-size: 0.88rem; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; }
+  a { color: #0052cc; }
+  nav { font-size: 0.9rem; color: #6b778c; }
+  ol.toc { color: #42526e; }
+  .note { background: #f4f5f7; border-left: 3px solid #0052cc; padding: 0.6rem 1rem; margin: 1.2rem 0; }
+  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<nav><a href="./">Sprint Ledger</a> / Getting started</nav>
+<h1>Getting started with Sprint Ledger</h1>
+<p class="byline">Private beta guide &middot; updated 12 September 2026</p>
+
+<p>Sprint Ledger reconstructs the membership history of every sprint your site has ever run, keeps it current from Jira's own events, and gives you the answer as JQL functions and as issue fields you can put in a column. This page is everything a beta site needs: install, what the first few hours look like, the queries, and how to check the numbers against Jira's Sprint Report.</p>
+
+<ol class="toc">
+<li><a href="#install">Install</a></li>
+<li><a href="#first-run">The first reconstruction</a></li>
+<li><a href="#check-two">Two things to check first</a></li>
+<li><a href="#fields">The eight fields</a></li>
+<li><a href="#functions">The six JQL functions</a></li>
+<li><a href="#beta">What is not there yet</a></li>
+<li><a href="#accuracy">Checking the numbers against the Sprint Report</a></li>
+<li><a href="#privacy">Privacy, data and uninstalling</a></li>
+<li><a href="#support">Support</a></li>
+</ol>
+
+<h2 id="install">1. Install</h2>
+<p>Your install link is in the invitation email. Open it while signed in to Jira, pick the site, review the permissions and install. It takes about a minute and needs a <strong>Jira administrator</strong>; there is nothing to configure afterwards.</p>
+<p>Sprint Ledger is a Forge app: it runs inside Atlassian's infrastructure, and no issue data leaves your Jira. The consent screen asks to read Jira work, sprints, boards and projects, to write Jira work (used only to fill its own eight read-only fields) and to use Forge app storage.</p>
+<p>Installing starts the reconstruction by itself. You do not need to pick projects: every project that has a scrum or team-managed board is tracked by default, and you can turn projects off on the admin page at any time.</p>
+
+<h2 id="first-run">2. The first reconstruction</h2>
+<p>The app reads the changelog of every issue that has ever been in a sprint and rebuilds, sprint by sprint, who was in it at the start, what arrived later, what left, what was finished and what rolled over.</p>
+<p>Watch it at <strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. The page shows a progress banner with an estimate (it appears once the run is about 5% in, because the first stages are dominated by scheduling), and a table of every board it has discovered with its sprint count and state, plus a <em>Re-run</em> button per board and <em>Rebuild every tracked board</em>.</p>
+
+<h3>How long it takes</h3>
+<p>A full reconstruction costs about two Jira API points per issue that has ever been in a sprint, and the app spends at most 12,000 points an hour so that it never crowds out your other apps or your own integrations. That works out at roughly 6,000 issues an hour.</p>
+<table>
+<thead><tr><th>Issues that have ever been in a sprint</th><th>Expect</th></tr></thead>
+<tbody>
+<tr><td>under 2,000</td><td>a few minutes</td></tr>
+<tr><td>10,000</td><td>about 2 hours</td></tr>
+<tr><td>30,000</td><td>about 5 hours</td></tr>
+<tr><td>100,000</td><td>about 17 hours</td></tr>
+</tbody>
+</table>
+<p>It is safe to walk away. The run checkpoints itself after every batch, pauses when the hourly budget runs low, resumes on its own, and survives you closing the page. A rebuild is also safe to start at any time: the ledger is rewritten in place, never duplicated.</p>
+<p>The fields and the JQL functions start answering when the run reaches its last stage, so treat the admin page saying the run has finished as the moment to start querying. From then on the ledger is kept current live: a drag into or out of a sprint shows up in the fields within a few seconds, a sprint start or completion within about five, and an hourly pass reconciles anything an event missed.</p>
+
+<h2 id="check-two">3. Two things to check first</h2>
+<p>Both are one-time Jira configuration, and both are the usual reason a beta site thinks something is missing.</p>
+<h3>Share each board's filter with the project</h3>
+<p>Jira shows a board to an app only when the app can see the board's filter. A board with a private filter is invisible, and its sprints will be missing from the ledger. If a board you expected is not in the admin page's table, open <strong>Filters &rarr; the board's filter &rarr; Details &rarr; Edit permissions</strong>, share it with the project (or with everyone logged in), and then press <em>Rebuild every tracked board</em>.</p>
+<h3>Add the fields to team-managed projects</h3>
+<p>The fields work as <strong>columns and in JQL everywhere with no setup at all</strong>. They only need adding if you want to see them on the issue view:</p>
+<ul>
+<li><strong>Team-managed project:</strong> Project settings &rarr; Fields &rarr; <em>Add field</em>, pick the fields whose name ends in "(Ledger)", and drag each one into the layout of every work type that should show it.</li>
+<li><strong>Company-managed project:</strong> add the fields to the issue screen the project uses, as you would any other custom field.</li>
+</ul>
+
+<h2 id="fields">4. The eight fields</h2>
+<p>All eight are read-only and written only by the app, in bulk, without touching issue history. Five of them describe the issue's <em>latest sprint</em>, meaning the most recent started sprint the issue counts in, including one it was removed from.</p>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>What it holds</th></tr></thead>
+<tbody>
+<tr><td>Sprint scope (Ledger)</td><td>text</td><td>How the issue entered its latest sprint: Committed, Added after start, Removed, or Added then removed</td></tr>
+<tr><td>Added to sprint (Ledger)</td><td>date and time</td><td>When the issue entered its latest sprint</td></tr>
+<tr><td>Removed from sprint (Ledger)</td><td>date and time</td><td>When it left; empty unless it was removed</td></tr>
+<tr><td>Sprint start (Ledger)</td><td>date and time</td><td>Start date of the latest sprint</td></tr>
+<tr><td>Sprint end (Ledger)</td><td>date and time</td><td>Planned end date, or the completion date once the sprint is closed</td></tr>
+<tr><td>Sprints carried (Ledger)</td><td>number</td><td>How many closed sprints the issue left unfinished</td></tr>
+<tr><td>Original sprint (Ledger)</td><td>text</td><td>Name of the first sprint the issue was ever in</td></tr>
+<tr><td>Sprint ledger tags</td><td>text list</td><td>One token per sprint: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID. This is what the JQL functions search; the newest 100 sprints are kept per issue</td></tr>
+</tbody>
+</table>
+<p>They sort, they filter and they export like any other field:</p>
+<pre><code>"Sprint start (Ledger)" &gt;= 2026-07-01 AND "Sprint scope (Ledger)" = "Added after start"
+project = ACME AND "Sprints carried (Ledger)" &gt;= 3 ORDER BY "Sprints carried (Ledger)" DESC
+"Removed from sprint (Ledger)" &gt;= -14d</code></pre>
+
+<h2 id="functions">5. The six JQL functions</h2>
+<p>Each one is used as <code>issue in f(...)</code> or <code>issue not in f(...)</code>, and works wherever JQL works: filters, boards, dashboards, automation rules and filter subscriptions.</p>
+<table>
+<thead><tr><th>Function</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>addedAfterSprintStart(sprint?, board?)</code></td><td>Issues that joined the sprint after it started</td></tr>
+<tr><td><code>removedFromSprint(sprint?, board?)</code></td><td>Issues taken out after it started and before it closed</td></tr>
+<tr><td><code>committedTo(sprint?, board?)</code></td><td>Issues that were in the sprint the moment it started</td></tr>
+<tr><td><code>completedIn(sprint?, board?)</code></td><td>Issues in the sprint at completion whose status counted as done</td></tr>
+<tr><td><code>carriedOverFrom(sprint?, board?)</code></td><td>Issues in the sprint at completion that were not done</td></tr>
+<tr><td><code>carriedOver(n)</code></td><td>Issues that have rolled out of at least <em>n</em> closed sprints</td></tr>
+</tbody>
+</table>
+<p>The sprint argument is a sprint name, a numeric sprint ID, or nothing at all, which means every active sprint on the site. A name matches every sprint with that name on any board, which is usually what you want across parallel boards; add the board name as a second argument to narrow it, or use the ID. A name that matches nothing gives you a message in the JQL editor rather than a silent empty result.</p>
+<pre><code>project = ACME AND issue in addedAfterSprintStart("ACME Sprint 42")
+sprint in openSprints() AND issue in addedAfterSprintStart()
+issue in committedTo("ACME Sprint 41") AND issue not in completedIn("ACME Sprint 41")
+issue in removedFromSprint("ACME Sprint 41") AND issue not in committedTo("ACME Sprint 42")
+issue in carriedOver(2) AND statusCategory != Done ORDER BY "Sprints carried (Ledger)" DESC
+issue in addedAfterSprintStart("Sprint 7", "ACME board")</code></pre>
+<p>The fourth one is the query people write to us about most: what was dropped from last sprint and never picked back up.</p>
+
+<h2 id="beta">6. What is not there yet</h2>
+<p>You are early, so here is the honest list. Everything below is built during the beta and arrives by app update, with no action from you:</p>
+<ul>
+<li><strong>The dashboard gadget</strong> (committed, added, removed, completed, carried, say/do and scope change per sprint, with a chart).</li>
+<li><strong>CSV export</strong> per sprint and per board, including who added or removed each issue and when.</li>
+<li><strong>The settings on the admin page</strong>: the definition of "done", whether subtasks count, and how far back the deep scan reaches. Until then the defaults are in force: done means the board's rightmost column, subtasks are tracked but left out of counts and tags, and the sweep for issues that were removed from every sprint covers the last 12 months.</li>
+<li><strong>The project settings page</strong>, for teams that should see their own project without a Jira admin.</li>
+</ul>
+<p>What is already there and safe to lean on: the reconstruction, the live capture, the hourly reconciliation, the eight fields and the six functions.</p>
+
+<h2 id="accuracy">7. Checking the numbers against the Sprint Report</h2>
+<p>This is the one thing we would like every beta site to do, and it takes about fifteen minutes. Pick three closed sprints, ideally ones you remember, and compare.</p>
+<ol>
+<li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose the sprint.</li>
+<li>Run the four queries below with that sprint's name and compare each list with the report's: "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint", and the asterisked issues (the report's footnote marks those as added after start).</li>
+</ol>
+<pre><code>issue in committedTo("ACME Sprint 41")
+issue in addedAfterSprintStart("ACME Sprint 41")
+issue in removedFromSprint("ACME Sprint 41")
+issue in completedIn("ACME Sprint 41")
+issue in carriedOverFrom("ACME Sprint 41")</code></pre>
+<p>Three differences are expected and are not bugs:</p>
+<table>
+<thead><tr><th>You will see</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Subtasks are missing from both</td><td>Jira's report excludes them and so do we, by default. The ledger still tracks them, and a setting to count them is coming.</td></tr>
+<tr><td>An issue that was added after the start and then removed again appears in <em>both</em> <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while Jira's report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and reporting on scope change needs both. Jira shows each issue once, in one list.</td></tr>
+<tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. A setting to define done by status category instead is coming.</td></tr>
+</tbody>
+</table>
+<p>An issue that was committed, removed and then put back counts as committed, exactly as Jira's report treats it. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
+
+<h2 id="privacy">8. Privacy, data and uninstalling</h2>
+<p>Sprint Ledger stores issue IDs and keys, project IDs, sprint and board metadata, timestamps, the account ID of whoever added or removed an issue, and the values it computes. It does <strong>not</strong> store summaries, descriptions, comments or attachments. Nothing is sent anywhere: there are no external services and no egress, because the app runs on Atlassian's own infrastructure and its data lives in Forge storage attached to your installation, which also means it inherits your site's data residency.</p>
+<p>Account IDs are captured so that an export can say who changed the scope; a setting to turn that off is part of the settings work above, and until it ships we will turn it off for you on request. Uninstalling the app removes the installation and the storage that belongs to it; an explicit "Delete all ledger data" button arrives on the admin page with the rest of the settings.</p>
+<p>The beta is free. When the app is listed, beta sites keep it free for 60 days from the listing date, and sites with up to 10 users stay free after that.</p>
+
+<h2 id="support">9. Support</h2>
+<p>Reply to the invitation email, or write to <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>. During the beta you get an answer the same day, from the person who writes the app. Backfill stuck, a number that looks wrong, a field name that reads badly, a query you expected to work: all of it is useful, and the naming in particular is still open.</p>
+
+<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. <a href="./">Home</a> &middot; <a href="articles/four-ways-to-find-issues-added-after-sprint-start.html">Articles</a></footer>
+</body>
+</html>
