@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy | Sprint Ledger</title>
+<meta name="description" content="What Sprint Ledger for Jira stores, where it stores it, who can see it, and how to have it deleted.">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.35rem; margin-top: 2.2rem; }
+  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
+  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: #f4f5f7; padding: 0.8rem 1rem; border-radius: 3px; overflow-x: auto; font-size: 0.88rem; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; }
+  a { color: #0052cc; }
+  nav { font-size: 0.9rem; color: #6b778c; }
+  ol.toc { color: #42526e; }
+  .note { background: #f4f5f7; border-left: 3px solid #0052cc; padding: 0.6rem 1rem; margin: 1.2rem 0; }
+  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<nav><a href="./">Sprint Ledger</a> / Privacy policy</nav>
+<h1>Privacy policy</h1>
+<p class="byline">Sprint Ledger for Jira Cloud &middot; in effect 12 September 2026</p>
+
+<p>Sprint Ledger is published by <strong>Yord Soft</strong> (Damian Plamenov Yordanov), and this policy covers the Sprint Ledger app for Jira Cloud. It describes what the app stores, where it is stored, who can reach it and how to have it removed. Questions and requests: <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>.</p>
+
+<div class="note">Sprint Ledger is an Atlassian Forge app. It runs inside Atlassian's own infrastructure, and the data it keeps lives in Forge storage attached to your installation. There are no servers of ours, no third-party services and no egress: nothing the app reads from your Jira is sent anywhere outside it.</div>
+
+<h2 id="what">What the app stores</h2>
+<p>To answer questions about sprint scope, the app reconstructs the membership history of your sprints from Jira's own changelog and keeps the result. That record holds:</p>
+<ul>
+<li>issue IDs and issue keys, and the project ID each belongs to;</li>
+<li>sprint and board metadata: IDs, names, states, start, end and completion dates, the board's estimation field;</li>
+<li>for each issue and sprint, the times it was added to and removed from that sprint, whether it was present when the sprint started, whether it was completed, its status category and its estimate at the relevant moments;</li>
+<li>the <strong>Atlassian account ID</strong> of the person whose change added or removed an issue, when Jira's changelog records one;</li>
+<li>the values the app computes from all of the above, which are also written back into your Jira as the app's eight read-only custom fields;</li>
+<li>app settings and housekeeping records: which projects are enabled, run history, progress checkpoints and hourly API usage counters.</li>
+</ul>
+<p>The app does <strong>not</strong> store issue summaries, descriptions, comments, attachments, worklogs or any other issue content, and it does not store user names or email addresses.</p>
+
+<h2 id="personal">Personal data</h2>
+<p>The only personal data the app stores is the Atlassian account ID attached to a sprint membership change. It is kept so that a scope change can be attributed to the person who made it, which is the question teams ask of a scope report. No profile information is copied: an account ID is resolved to a name only by Jira itself, when it displays it to someone who already has access.</p>
+<p>If you would rather the app did not keep account IDs at all, write to us and we will switch that off for your site; the setting becomes self-service on the admin page in a later release, and turning it off makes the app store <code>null</code> in place of every account ID from that point on.</p>
+<p>The app also records the account ID of the administrator who opens its admin page for the length of that request, in order to check that they hold the Jira administrator permission. That check is not stored.</p>
+
+<h2 id="where">Where the data lives</h2>
+<p>All of it lives in Forge storage &mdash; Forge SQL and the Forge key-value store &mdash; provisioned by Atlassian for your installation of the app and reachable only by that installation. It therefore sits inside Atlassian's infrastructure and follows your site's data residency. The app holds no database, no object store and no account of its own, and it makes no network call to any host other than your own Jira site's API.</p>
+<p>Sprint Ledger is eligible for Atlassian's <a href="https://go.atlassian.com/runs-on-atlassian">Runs on Atlassian</a> programme, which is Atlassian's own check that an app stores its data on Atlassian infrastructure and egresses nothing.</p>
+
+<h2 id="who">Who can see it</h2>
+<p>Inside your site, the app shows a person only what Jira already lets them see: its JQL functions and custom fields run under the permissions of the user running the query, and the admin page refuses anyone who is not a Jira administrator.</p>
+<p>As the app's developer we can read the app's runtime <strong>logs</strong> through Atlassian's developer console. The app writes IDs, counts, durations and error messages to those logs, deliberately never issue content; Atlassian retains them for a limited period and we use them only to see that installs and reconstructions are healthy and to diagnose faults. We cannot read your Forge storage, your issues or your sprints.</p>
+<p>We do not sell, share or transfer any of this data, and there are no sub-processors: no analytics, no error-reporting service, no advertising, no tracking of any kind.</p>
+
+<h2 id="retention">How long it is kept, and deletion</h2>
+<p>The record is kept for as long as the app is installed, because it is the app's whole purpose: a sprint closed in 2021 is still the answer to a question asked in 2026. Housekeeping trims only its own by-products &mdash; finished run records after 14 days, hourly usage counters after 48 hours.</p>
+<p><strong>Uninstalling the app removes the installation and the Forge storage that belongs to it.</strong> The eight custom fields the app wrote into your issues are removed with the app's fields. If you want the ledger deleted while keeping the app installed, write to us and we will clear it; a &ldquo;delete all ledger data&rdquo; button arrives on the admin page in a later release.</p>
+<p>To ask what is held about a particular account ID, to have it removed, or to exercise any other right you have under applicable data protection law, write to <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>. During the beta you get an answer the same day.</p>
+
+<h2 id="changes">Changes to this policy</h2>
+<p>If what the app stores changes, this page changes with it and the date at the top moves. Beta sites are told by email when a change affects what is stored.</p>
+
+<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. <a href="./">Home</a> &middot; <a href="getting-started.html">Getting started</a></footer>
+</body>
+</html>
