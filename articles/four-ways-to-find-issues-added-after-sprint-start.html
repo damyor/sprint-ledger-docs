@@ -48,6 +48,10 @@
 <li><strong>A gadget and CSV export</strong>: committed, added, removed, completed, carried, say/do and scope change per sprint, in issues or story points, with an issue-level export that says who added or removed what and when.</li>
 </ul>
 <p>It is retroactive for every sprint the site has run, it follows the Sprint Report's definitions (so the numbers match, and the differences are documented), and it runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced so that a 100-user site pays about $50 a month and sites with up to 10 users pay nothing.</p>
+<figure style="margin:1.5rem 0">
+<img src="../media/sprint-ledger-jql.gif" alt="The Jira issue navigator running issue in addedAfterSprintStart(&quot;SLT Sprint 2&quot;) with nine results, then the Sprint scope, Added to sprint, Sprint start, Sprint end and Sprints carried columns, then a query over the Sprint start and Sprint scope fields returning 40 issues" width="960" height="765" style="max-width:100%;height:auto;border:1px solid #dfe1e6;border-radius:4px" loading="lazy">
+<figcaption style="font-size:0.9rem;color:#6b778c">Thirty seconds on the demo site: a function in the JQL bar and its results, the Ledger columns, then a second query over the fields alone.</figcaption>
+</figure>
 <h2>Which one is enough?</h2>
 <table border="1" cellpadding="6" style="border-collapse:collapse">
 <thead><tr><th></th><th>Sprint Report</th><th>Automation rule</th><th>JQL Search Extensions</th><th>Sprint Ledger</th></tr></thead>
