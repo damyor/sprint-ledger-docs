@@ -50,7 +50,8 @@
 
 <h2 id="first-run">2. The first reconstruction</h2>
 <p>The app reads the changelog of every issue that has ever been in a sprint and rebuilds, sprint by sprint, who was in it at the start, what arrived later, what left, what was finished and what rolled over.</p>
-<p>Watch it at <strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. The page shows a progress banner with an estimate (it appears once the run is about 5% in, because the first stages are dominated by scheduling), and a table of every board it has discovered with its sprint count and state, plus a <em>Re-run</em> button per board and <em>Rebuild every tracked board</em>.</p>
+<p>Watch it at <strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. The page shows a progress banner with an estimate (it appears once the run is about 5% in, because the first stages are dominated by scheduling), and a table of every board it has discovered with its sprint count and state, plus a <em>Re-run</em> button per board and <em>Rebuild every tracked board</em>. A board whose project does not use sprints, such as a team-managed Kanban board, is listed as <em>no sprints</em> and skipped.</p>
+<p>If a reconstruction stops on an error, it starts again by itself after the next app update, which is how a fix reaches your site; there is nothing to press.</p>
 
 <h3>How long it takes</h3>
 <p>A full reconstruction costs about two Jira API points per issue that has ever been in a sprint, and the app spends at most 12,000 points an hour so that it never crowds out your other apps or your own integrations. That works out at roughly 6,000 issues an hour.</p>
@@ -89,7 +90,7 @@
 <tr><td>Sprint end (Ledger)</td><td>date and time</td><td>Planned end date, or the completion date once the sprint is closed</td></tr>
 <tr><td>Sprints carried (Ledger)</td><td>number</td><td>How many closed sprints the issue left unfinished</td></tr>
 <tr><td>Original sprint (Ledger)</td><td>text</td><td>Name of the first sprint the issue was ever in</td></tr>
-<tr><td>Sprint ledger tags</td><td>text list</td><td>One token per sprint: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID. This is what the JQL functions search; the newest 100 sprints are kept per issue</td></tr>
+<tr><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID. This is what the JQL functions search; the newest 100 sprints are kept per issue</td></tr>
 </tbody>
 </table>
 <p>They sort, they filter and they export like any other field:</p>
