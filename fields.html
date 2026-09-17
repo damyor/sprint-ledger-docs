@@ -83,6 +83,16 @@ project = ACME AND "Sprint carried (Ledger)" &gt;= 3 ORDER BY "Sprint carried (L
 </ul>
 <p>An empty read-only field shows as "None" on the issue view unless the layout puts it under "Hide when empty".</p>
 
+<h2 id="sprint-history">Why an issue has its values</h2>
+<p>The issue panel <strong>Sprint history (Ledger)</strong> shows, for one issue, every sprint it has been in and the reason for each value. Open the issue, press the apps button under its title and choose <em>Sprint history (Ledger)</em>. Anyone who can edit the issue can add the panel; once added it stays on that issue for everyone who opens it, and <em>Remove</em> in its &hellip; menu takes it off.</p>
+<p>For each sprint, newest first, the panel shows when the sprint started and completed, every tag of <a href="#sprint-tags">Sprint tags (Ledger)</a> that sprint gives the issue with the reason for it (in the sprint when it started, added after the start, left before the close, and the status it was in at the close and whether that status counts as done), when the issue entered and left the sprint and who moved it, and its estimate at the start and at the close. A sprint that gives no tags says why: it has not started, it was deleted, the issue left it before it started, or the issue is a subtask while subtasks are not counted.</p>
+<figure>
+<a href="media/issue-panel.png"><img src="media/issue-panel.png" alt="The Sprint history (Ledger) panel on an issue that was added to SLT Sprint 3 after its start and carried over, then committed to SLT Sprint 4 and completed there: each sprint with its dates, each tag with its reason, who added the issue and its estimates" width="1288" height="952" loading="lazy"></a>
+<figcaption>An issue added to one sprint after its start and carried over, then committed to the next sprint and completed there.</figcaption>
+</figure>
+<p>Times are shown in your browser's time zone, with the offset after each one (for example GMT+3). Jira shows its own date fields in the time zone of your Jira profile, so when the two differ, the same moment appears with different hours in the panel and in the field beside it.</p>
+<p>When you add the panel it shows the history at once. On an issue someone added it to earlier, and on every issue if an administrator chooses <em>Show for all work items</em> in its &hellip; menu, it waits for <em>Show sprint history</em>, so that opening an issue costs nothing until someone asks. <em>Refresh</em> reads it again; a change made a moment ago can take a few seconds to appear.</p>
+
 <h2 id="updates">When the values change</h2>
 <p>The values are written only by the app, in bulk, without adding entries to the issue's history. They follow Jira's own events: an issue dragged into or out of a sprint has its fields updated within a few seconds, and a sprint start or completion within about five. An hourly check compares each active and recently closed sprint with Jira and repairs anything an event missed, and a daily pass rewrites any value that has fallen behind. After the first installation, the fields fill in when the reconstruction reaches its last stage.</p>
 <p>A field stays empty when the issue has never counted in a started sprint, when its project is not tracked, or for a subtask while subtasks are not counted.</p>
