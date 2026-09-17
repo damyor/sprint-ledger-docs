@@ -4,26 +4,62 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sprint Ledger for Jira</title>
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 720px; margin: 4rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.5; }
-  h1 { font-size: 2rem; margin-bottom: 0.25rem; }
-  p.lead { font-size: 1.15rem; color: #42526e; }
-  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; }
-  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; }
-</style>
+<meta name="description" content="Sprint scope change and carry-over as JQL and columns, for every sprint your Jira Cloud site has ever run: what was added after sprint start, removed, completed and carried over.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sprint Ledger for Jira">
+<meta property="og:description" content="Sprint scope change and carry-over as JQL and columns, for every sprint you have ever run.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
 </head>
 <body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
 <h1>Sprint Ledger for Jira</h1>
-<p class="lead">Sprint scope change and carryover as JQL and columns, for every sprint you have ever run.</p>
-<p>Ask Jira what was added after you committed, what was removed, what was completed and what keeps rolling over: <code>issue in addedAfterSprintStart("Sprint 42")</code>.</p>
-<p>The app is in a private beta. The JQL function reference and the support page will be published here before the Marketplace listing; the <a href="privacy.html">privacy policy</a> is live.</p>
-<h2>Beta</h2>
-<p><a href="getting-started.html">Getting started with Sprint Ledger</a>: install, the first reconstruction, the ten fields, the nine JQL functions, and how to check the numbers against Jira's Sprint Report. Written for private beta sites.</p>
-<h2>Articles</h2>
-<p><a href="articles/four-ways-to-find-issues-added-after-sprint-start.html">Four ways to find issues added after sprint start in Jira Cloud (2026)</a>: the Sprint Report, an automation rule, Appfire's JQL Search Extensions and Sprint Ledger compared, and when each is enough.</p>
-<p><a href="articles/how-to-find-issues-removed-from-a-sprint.html">How to find issues removed from a sprint in Jira Cloud (2026)</a>: why JQL cannot search the Sprint field's history, and the Sprint Report, an issue's history, the report's endpoint, an automation log and Sprint Ledger compared.</p>
-<p><a href="articles/sprint-start-and-end-dates-in-jql.html">Sprint start and end dates in JQL and as columns (Jira Cloud, 2026)</a>: Jira's sprint functions, automation into date fields, a sprint-fields app and Sprint Ledger compared.</p>
-<p>Private beta sign-up: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
-<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. <a href="privacy.html">Privacy policy</a></footer>
+<p class="lead">Sprint scope change and carry-over as JQL and columns, for every sprint you have ever run.</p>
+<p>Ask Jira what was added after you committed, what was removed, what was completed and what keeps rolling over: <code>issue in addedAfterSprintStart("Sprint 42")</code>. Sprint Ledger rebuilds each sprint from the history Jira already keeps, so it answers for sprints that closed years ago as well as for today's, and it runs entirely on Atlassian's infrastructure.</p>
+<p>The app is in a private beta for Jira Cloud. <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">Sign up for the beta</a>; you get one email, with the install link.</p>
+
+<h2 id="docs">Documentation</h2>
+<ul class="pages">
+<li><a href="getting-started.html">Getting started</a>: install, the first reconstruction, two things to check, and comparing the numbers with Jira's Sprint Report.</li>
+<li><a href="functions.html">JQL functions</a>: the nine functions, their arguments and patterns, the messages they give, and examples.</li>
+<li><a href="fields.html">Fields</a>: the ten read-only fields, as columns, in JQL and on the issue view.</li>
+<li><a href="gadget.html">Dashboard gadget</a>: committed, added, removed, completed and carried over per sprint, with say/do and scope change.</li>
+<li><a href="export.html">CSV export</a>: a board's sprints or one sprint's issues, for Excel, Google Sheets and Power BI.</li>
+<li><a href="classification.html">How Sprint Ledger counts</a>: the definitions, the awkward cases, and the differences from the Sprint Report.</li>
+<li><a href="admin.html">Administration</a>: projects, boards, settings, the API budget, updates, troubleshooting and uninstalling.</li>
+<li><a href="faq.html">FAQ</a>, <a href="changelog.html">changelog</a> and <a href="support.html">support</a>.</li>
+</ul>
+
+<h2 id="articles">Articles</h2>
+<ul class="pages">
+<li><a href="articles/four-ways-to-find-issues-added-after-sprint-start.html">Four ways to find issues added after sprint start in Jira Cloud (2026)</a>: the Sprint Report, an automation rule, Appfire's JQL Search Extensions and Sprint Ledger compared, and when each is enough.</li>
+<li><a href="articles/how-to-find-issues-removed-from-a-sprint.html">How to find issues removed from a sprint in Jira Cloud (2026)</a>: why JQL cannot search the Sprint field's history, and the Sprint Report, an issue's history, the report's endpoint, an automation log and Sprint Ledger compared.</li>
+<li><a href="articles/sprint-start-and-end-dates-in-jql.html">Sprint start and end dates in JQL and as columns (Jira Cloud, 2026)</a>: Jira's sprint functions, automation into date fields, a sprint-fields app and Sprint Ledger compared.</li>
+</ul>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
 </body>
 </html>

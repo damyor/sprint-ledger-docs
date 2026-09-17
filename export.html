@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSV export | Sprint Ledger</title>
+<meta name="description" content="Export a board's sprints or one sprint's issues from Sprint Ledger as CSV for Excel, Google Sheets or Power BI: every column, the number and date formats, and who can export.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/export">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sprint scope as CSV for Excel, Sheets and Power BI">
+<meta property="og:description" content="A board's sprints or one sprint's issues as CSV, with who changed the scope and when.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/export">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html" aria-current="page">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>CSV export</h1>
+<p class="byline">Reference &middot; updated 17 September 2026 (app version 2.6.0)</p>
+
+<p>Sprint Ledger exports two files for spreadsheets and BI tools: every sprint of a board, one row per sprint, and one sprint, one row per issue. The export is on the project's settings page, which a project's administrators and Jira administrators can open: <strong>Space settings</strong> (<strong>Project settings</strong> on some sites) &rarr; <strong>Apps</strong> &rarr; <strong>Sprint Ledger</strong>, section <em>Export</em>. The dashboard gadget links to it.</p>
+
+<figure>
+<a href="media/project-settings-page.png"><img src="media/project-settings-page.png" alt="The Sprint Ledger project settings page: a tracking switch, the project's boards with their sprint counts and history state, and the export section with Board, What to export and Numbers selects and a Download CSV button" width="1288" height="852" loading="lazy"></a>
+<figcaption>The project settings page, with the export section at the bottom.</figcaption>
+</figure>
+
+<h2 id="how">Exporting</h2>
+<ol>
+<li>Choose the <strong>board</strong>: the project's tracked boards that use sprints.</li>
+<li>Choose <strong>what to export</strong>: <em>Every sprint of the board</em>, or one of its started sprints.</li>
+<li>Choose the <strong>number format</strong>: <em>1.5, with commas between columns</em>, or <em>1,5, with semicolons between columns</em>, which is what a spreadsheet in much of continental Europe expects. It starts on the format your browser uses; pick the other one when the file is for someone else.</li>
+<li>Press <strong>Download CSV</strong>. The file is built in your browser and saved like any download.</li>
+</ol>
+
+<h2 id="board-file">Every sprint of a board</h2>
+<p>File name <code>sprint-ledger_&lt;board&gt;_all-sprints.csv</code>. One row per started sprint, oldest first, with the gadget's numbers:</p>
+<table>
+<thead><tr><th>Column</th><th>Holds</th></tr></thead>
+<tbody>
+<tr><td>Sprint, Sprint id, State</td><td>The sprint's name, ID and state (active or closed)</td></tr>
+<tr><td>Start (UTC), End (UTC)</td><td>The sprint's start date; the completion date of a closed sprint, or the planned end of the active one</td></tr>
+<tr><td>Committed, Added after start, Removed, Completed, Carried over</td><td>Issue counts, as defined on <a href="classification.html">How Sprint Ledger counts</a></td></tr>
+<tr><td>Say/do, Scope change</td><td>Ratios, for example 0.875: completed divided by committed, and added plus removed divided by committed. Format the column as a percentage to read them as the gadget shows them. Empty when nothing was committed</td></tr>
+<tr><td>Committed estimate, Added estimate, Removed estimate, Completed estimate, Carried over estimate</td><td>The same five in the board's estimate. For a board estimated in time the headings end in "(hours)"</td></tr>
+</tbody>
+</table>
+
+<h2 id="sprint-file">One sprint</h2>
+<p>File name <code>sprint-ledger_&lt;board&gt;_&lt;sprint&gt;.csv</code>. One row per issue that counted in the sprint:</p>
+<table>
+<thead><tr><th>Column</th><th>Holds</th></tr></thead>
+<tbody>
+<tr><td>Issue key, Summary, Issue type, Subtask</td><td>The issue as Jira shows it now; Subtask is TRUE or FALSE</td></tr>
+<tr><td>Scope</td><td>Committed, Added after start, Removed, or Added then removed</td></tr>
+<tr><td>Added at (UTC), Added by (account id)</td><td>When the issue first joined the sprint (before the start, for a committed issue) and the account that added it</td></tr>
+<tr><td>Removed at (UTC), Removed by (account id)</td><td>When it was taken out and by whom; empty unless it was removed</td></tr>
+<tr><td>Estimate at start, Estimate at close</td><td>The estimate when it entered the sprint (at the start for a committed issue) and at the close, or when it was removed. "(hours)" for time estimates</td></tr>
+<tr><td>Status at close</td><td>The issue's status when the sprint closed</td></tr>
+<tr><td>Completed, Carried over</td><td>TRUE or FALSE; for the active sprint they are provisional until it closes</td></tr>
+</tbody>
+</table>
+<p><strong>Who added or removed an issue</strong> is the person's Atlassian account ID rather than their name, because showing names would need an extra permission every installed site would have to approve. An administrator can turn off storing account IDs on the <a href="admin.html#settings">admin page</a>; the two columns are then empty for changes made afterwards.</p>
+
+<h2 id="format">The file format</h2>
+<ul>
+<li>UTF-8 with a byte order mark, the marker Excel looks for to read accented and non-Latin text as UTF-8; lines end in CRLF; quoting follows RFC 4180.</li>
+<li>Dates are <code>YYYY-MM-DD HH:MM:SS</code> in UTC; true and false are <code>TRUE</code> and <code>FALSE</code>; counts are whole numbers and estimates have up to two decimals.</li>
+<li>A summary or a name that a spreadsheet would run as a formula (starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code>) is written with an apostrophe in front, so opening an export can never run one.</li>
+<li>In Google Sheets, use <em>File &rarr; Import</em>; the separator is detected. For Power BI, <em>Get data &rarr; Text/CSV</em>.</li>
+</ul>
+
+<h2 id="permissions">What each person gets</h2>
+<p>Summaries and issue types are read from Jira as the person exporting, so an issue they cannot see in Jira is left out of the one-sprint file, and the page says how many were left out. The counts in the per-board file come from the app's records and are the same for everyone who can open the page.</p>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

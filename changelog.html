@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changelog | Sprint Ledger</title>
+<meta name="description" content="Every update of Sprint Ledger for Jira Cloud since the private beta opened, newest first.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/changelog">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>Changelog</h1>
+<p class="byline">Every update since the private beta opened, newest first</p>
+
+<p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
+
+<h2 id="v2.6.0">2.6.0 &middot; 17 September 2026</h2>
+<ul>
+<li>The field names are settled. Four are renamed: Sprint added, Sprint removed, Sprint carried and Sprint original (<a href="fields.html#renamed">the old names</a>). Sprint end splits into <strong>Sprint completed</strong>, the completion date only, and the new <strong>Sprint planned end</strong>. The new <strong>Sprint membership</strong> lists every sprint an issue has been in. Every issue's fields are recomputed once, automatically. A saved filter that uses an old name needs the new one.</li>
+<li>Three new functions for what is in sprints now, by name or pattern and state: <code>sprintsNamed</code>, <code>openSprintsNamed</code> and <code>futureSprintsNamed</code> (<a href="functions.html#named">reference</a>).</li>
+<li>The CSV export offers two number formats, 1.5 with commas or 1,5 with semicolons, for spreadsheets set to continental European formats.</li>
+</ul>
+
+<h2 id="v2.5.0">2.5.0 &middot; 17 September 2026</h2>
+<ul>
+<li>New: the <a href="gadget.html">dashboard gadget</a> <em>Sprint scope and say/do (Ledger)</em>.</li>
+<li>New: the <a href="export.html">CSV export</a> on the project settings page, one row per sprint of a board or one row per issue of a sprint.</li>
+<li>Re-reading one board or one project no longer classifies the whole site again, which turns minutes into seconds on a site with many boards.</li>
+</ul>
+
+<h2 id="v2.4.0">2.4.0 &middot; 17 September 2026</h2>
+<ul>
+<li>Sprint names in function arguments can be patterns: <code>"Plan: 25_1*"</code> covers every sprint whose name matches. Names, patterns and board names ignore upper and lower case, as Jira does.</li>
+<li>New: the <a href="admin.html#project-page">project settings page</a>, where a project's administrators turn tracking on or off and read its boards' history.</li>
+</ul>
+
+<h2 id="v2.3.0">2.3.0 &middot; 16 September 2026</h2>
+<ul>
+<li>Fixed: a reconstruction could stop while reading estimate changes on some sites; the stopped run started again by itself after the update.</li>
+</ul>
+
+<h2 id="v2.2.0">2.2.0 &middot; 16 September 2026</h2>
+<ul>
+<li>A board that does not use sprints, such as a team-managed Kanban board, is skipped instead of stopping the reconstruction.</li>
+<li>A reconstruction that stopped starts again by itself once after each update, with nothing to press.</li>
+<li>The admin page's settings: the definition of done, counting subtasks, the deep backfill window, storing account IDs and the hourly API budget; <em>Anonymise user ids</em> and <em>Delete all ledger data</em>; example queries with the site's own sprint names.</li>
+<li>"Sprint ledger tags" is renamed "Sprint tags (Ledger)".</li>
+</ul>
+
+<h2 id="v2.1.0">2.1.0 &middot; 14 September 2026</h2>
+<p>The first version installed by a beta site: the reconstruction of every sprint's history, live updates from Jira's events, the hourly check and the daily pass, eight fields, the six history functions, and the admin page with the reconstruction's progress. The stored answers of saved filters follow sprints as they start and complete.</p>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

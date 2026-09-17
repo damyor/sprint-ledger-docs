@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Sprint Ledger counts | Sprint Ledger</title>
+<meta name="description" content="How Sprint Ledger decides what was committed, added after sprint start, removed, completed and carried over, how it handles the edge cases, and where its answers differ from Jira's Sprint Report.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/classification">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Sprint Ledger counts sprint scope change">
+<meta property="og:description" content="The definitions behind committed, added, removed, completed and carried over, and how they compare with Jira's Sprint Report.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/classification">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html" aria-current="page">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>How Sprint Ledger counts</h1>
+<p class="byline">Definitions and deviations &middot; updated 17 September 2026 (app version 2.6.0)</p>
+
+<p>Every answer Sprint Ledger gives, in the JQL functions, the fields, the gadget and the export, comes from one reconstruction of each sprint, built from the history Jira keeps for every issue. This page says exactly how that reconstruction decides what an issue did in a sprint, so that a number can be checked, and where it differs from Jira's own Sprint Report.</p>
+
+<h2 id="inputs">What it reads</h2>
+<p>For each issue: every change Jira recorded to its Sprint field, status and estimate, and when the issue was created. For each sprint: its start date, its completion date, its state and the board it was created on. For each board: which statuses sit in which column, and which field holds the estimate. Nothing is guessed from the issue's current state when the history says otherwise.</p>
+<p>From the Sprint field's history the app builds each issue's <strong>membership</strong> of each sprint: periods that begin when the sprint was added to the issue and end when it was taken away. An issue created directly inside a sprint has no such change in its history, so its membership begins when the issue was created.</p>
+
+<h2 id="definitions">The definitions</h2>
+<p>Two moments decide everything: the sprint's <strong>start</strong>, its start date, and its <strong>close</strong>, its completion date, or now for the active sprint.</p>
+<table>
+<thead><tr><th>An issue is</th><th>when</th><th>In the Sprint Report</th></tr></thead>
+<tbody>
+<tr id="committed"><td><strong>Committed</strong></td><td>it was in the sprint at the start</td><td>listed without an asterisk</td></tr>
+<tr id="added"><td><strong>Added after start</strong></td><td>it was not committed, and joined the sprint after the start and before the close</td><td>marked with an asterisk</td></tr>
+<tr id="removed"><td><strong>Removed</strong></td><td>it was committed or added after start, and was no longer in the sprint at the close</td><td>Issues Removed From Sprint</td></tr>
+<tr id="added-then-removed"><td><strong>Added then removed</strong></td><td>it was added after start and removed</td><td>only under Issues Removed From Sprint</td></tr>
+<tr id="completed"><td><strong>Completed</strong></td><td>it was in the sprint at the close, with a status that counts as done</td><td>Completed Issues</td></tr>
+<tr id="carried"><td><strong>Carried over</strong></td><td>it was in the sprint at the close, and not done</td><td>Issues Not Completed</td></tr>
+</tbody>
+</table>
+<p><strong>Done</strong> means, by default, a status in the rightmost column of the sprint's board, as the Sprint Report counts it. An administrator can switch to "any status in the Done category" on the <a href="admin.html#settings">admin page</a>; the whole history is then classified again, without reading Jira.</p>
+<p><strong>Completed and carried over</strong> are final only for closed sprints. For the active sprint they describe the state now and change until it closes, which is why <code>completedIn()</code> and <code>carriedOverFrom()</code> answer for closed sprints only.</p>
+<p><strong>Estimates.</strong> A committed issue's estimate is the one it had at the start, an added issue's the one it had when it joined, as the Sprint Report does; the completed estimate is the one at the close, or at the moment of removal for a removed issue. When the estimate was never changed, its current value is used.</p>
+
+<h2 id="edge-cases">The awkward cases</h2>
+<table>
+<thead><tr><th>Case</th><th>What Sprint Ledger does</th></tr></thead>
+<tbody>
+<tr><td>Committed, taken out, then put back before the close</td><td>Committed, and not removed, as in the Sprint Report</td></tr>
+<tr><td>Added and taken out several times during the sprint</td><td>If it was committed: Removed when absent at the close, otherwise Committed. If not: Added then removed when absent at the close, otherwise Added after start</td></tr>
+<tr><td>Subtasks</td><td>Their history is kept, but they are left out of counts, tags and fields unless an administrator turns on counting them; Jira's report leaves them out too. In team-managed projects subtasks are never sprint members</td></tr>
+<tr><td>Parallel sprints, and a sprint shared by several boards</td><td>A sprint is identified by its ID, and membership does not depend on the board. The board the sprint was created on supplies the columns and the estimate field</td></tr>
+<tr><td>The start date edited after the sprint started</td><td>The sprint is classified again with the new date</td></tr>
+<tr><td>A deleted sprint</td><td>Its history is kept, but it produces no tags or field values, so the functions never return it</td></tr>
+<tr><td>A deleted issue</td><td>Left out of every count, as it is gone from the Sprint Report too. An issue deleted before the app was installed left no history to read</td></tr>
+<tr><td>An issue moved to another project</td><td>Followed by its ID, which Jira keeps</td></tr>
+<tr><td>The board's columns rearranged after a sprint closed</td><td>The current columns are used, which can move an old sprint's completed count; see the <a href="#sprint-report">differences</a> below</td></tr>
+<tr><td>An issue removed from every sprint it was ever in</td><td>Its Sprint field is empty, so Jira no longer lists it with any sprint. The reconstruction also reads issues without a sprint that were updated within a window before the first sprint start, 12 months by default, set on the <a href="admin.html#settings">admin page</a></td></tr>
+<tr><td>An issue in more than 100 sprints' worth of tags</td><td>The oldest sprints' tags are dropped, whole sprints at a time; the carry count and the history are unaffected</td></tr>
+<tr><td>A board whose filter is private</td><td>Jira does not show the board to apps, so its sprints are not reconstructed until the filter is shared with the project (<a href="faq.html#board-missing">FAQ</a>)</td></tr>
+</tbody>
+</table>
+
+<h2 id="sprint-report">How the numbers compare with the Sprint Report</h2>
+<p>Three differences are expected, and none is a bug:</p>
+<table>
+<thead><tr><th>You will see</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Subtasks missing from both</td><td>Jira's report leaves them out and so does Sprint Ledger by default. The admin page's subtask setting counts them.</td></tr>
+<tr><td>An issue added after the start and then removed appears in both <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while the report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and a scope-change report needs both. The report shows each issue once, in one list.</td></tr>
+<tr><td>An old sprint's completed count differs</td><td>"Completed" follows the board's columns as they are now. If the columns were rearranged after the sprint closed, the count can move. Defining done by status category on the admin page makes the answer independent of the columns.</td></tr>
+</tbody>
+</table>
+<p>On the app's test site, fifty closed sprints were compared list by list with Jira's Sprint Report, ten of them built to exercise the cases above and forty sampled from five years of a larger project: forty-nine agreed exactly, and the fiftieth differed only by the second case in the table.</p>
+
+<h3 id="check">Checking a sprint yourself</h3>
+<ol>
+<li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose a closed sprint.</li>
+<li>Run these with the sprint's name, and compare each list with the report's "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint" and the asterisked issues:</li>
+</ol>
+<pre><code>issue in committedTo("ACME Sprint 41")
+issue in addedAfterSprintStart("ACME Sprint 41")
+issue in removedFromSprint("ACME Sprint 41")
+issue in completedIn("ACME Sprint 41")
+issue in carriedOverFrom("ACME Sprint 41")</code></pre>
+<p>Anything that differs other than the three cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ | Sprint Ledger</title>
+<meta name="description" content="Questions about Sprint Ledger for Jira Cloud: differences from the Sprint Report, what it changes, where the data is, API budget, team-managed projects, Kanban, automation, pricing and uninstalling.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/faq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sprint Ledger FAQ">
+<meta property="og:description" content="Differences from the Sprint Report, data, API budget, team-managed projects, automation, pricing and uninstalling.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/faq">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html" aria-current="page">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>Frequently asked questions</h1>
+<p class="byline">Updated 17 September 2026</p>
+
+<h2 id="using">Using it</h2>
+<dl class="faq">
+<dt id="what">What does Sprint Ledger do?</dt>
+<dd>It rebuilds the history of every sprint your Jira site has run, from the history Jira keeps for each issue, and keeps it current. You get the answers as <a href="functions.html">JQL functions</a> (<code>issue in addedAfterSprintStart("Sprint 42")</code>), as <a href="fields.html">fields</a> you can show as columns, as a <a href="gadget.html">dashboard gadget</a> and as a <a href="export.html">CSV export</a>: what was committed, what was added after the start, what was removed, what was completed and what carried over.</dd>
+
+<dt id="why-not-report">Jira has a Sprint Report. Why is that not enough?</dt>
+<dd>The Sprint Report shows one sprint at a time, as a page. It cannot be searched, filtered, put in a column, used in an automation rule or exported for every sprint at once, which is what a retrospective across teams or a quarterly report needs. Sprint Ledger answers the same questions in JQL, so they work everywhere JQL works.</dd>
+
+<dt id="numbers-differ">Why do some numbers differ from the Sprint Report?</dt>
+<dd>Three differences are expected: subtasks are left out by default, as in the report; an issue added after the start and then removed counts as both added and removed, where the report lists it once; and "completed" follows the board's current columns, which matters for an old sprint if the columns were rearranged since. <a href="classification.html#sprint-report">How Sprint Ledger counts</a> explains each and how to check a sprint yourself. Any other difference is a bug we want to hear about.</dd>
+
+<dt id="old-sprints">Does it cover sprints from before it was installed?</dt>
+<dd>Yes. The first reconstruction reads the history of every issue that has been in a sprint, so a sprint closed years ago is answered like last week's, as far back as Jira's history for your issues goes.</dd>
+
+<dt id="automation">Can I use the functions in automation rules and saved filters?</dt>
+<dd>Yes: anywhere Jira takes JQL, including automation conditions, board filters, dashboard gadgets and filter subscriptions. Jira stores a function's answer and reuses it; the app updates those stored answers when sprints start, complete or are renamed, and daily. See <a href="functions.html#saved">Saved filters, boards and automation</a>.</dd>
+
+<dt id="renamed-fields">A saved filter says "Field ... does not exist"</dt>
+<dd>The fields were renamed in September 2026, and Jira does not rename fields inside saved queries. Replace the old name with the new one from the <a href="fields.html#renamed">table of names</a>.</dd>
+
+<dt id="team-managed">Does it work with team-managed projects?</dt>
+<dd>Yes, with the same functions, fields, gadget and export. Columns and JQL work with no setup; to see the fields on the issue view, add them on the project's Fields page (<a href="fields.html#issue-view">how</a>).</dd>
+
+<dt id="kanban">Does it work with Kanban boards?</dt>
+<dd>A Kanban board has no sprints, so there is nothing to reconstruct; the app lists such a board as "no sprints" and skips it.</dd>
+
+<dt id="data-center">Is there a version for Jira Data Center?</dt>
+<dd>No. Sprint Ledger is built on Atlassian Forge, which runs on Jira Cloud only.</dd>
+</dl>
+
+<h2 id="admin">Installing and running it</h2>
+<dl class="faq">
+<dt id="change-issues">Does it change my issues?</dt>
+<dd>Only its own ten read-only fields, which nobody else can edit. It writes them without adding entries to the issues' history, and it never changes summaries, statuses, sprints or any other field.</dd>
+
+<dt id="data">Where is my data, and does anything leave Atlassian?</dt>
+<dd>Nothing leaves Atlassian. The app runs on Atlassian's infrastructure, stores its records in Forge storage attached to your installation, in your site's data residency location, and makes no calls to any other service. It stores IDs, dates and the values it computes, never summaries, descriptions or comments. See the <a href="privacy.html">privacy policy</a> and <a href="security.html">security</a>.</dd>
+
+<dt id="who-sees">Who can see what?</dt>
+<dd>Searches return only issues the person searching can see. The admin page is for Jira administrators, the project settings page for the project's administrators, and the gadget and the export show a board's numbers only to people who can see the board.</dd>
+
+<dt id="api-budget">What does it cost my site's API budget, and how long does the first reconstruction take?</dt>
+<dd>About two Jira API points per issue that has ever been in a sprint, at most 12,000 points an hour by default: a few minutes for a small site, about two hours for 10,000 such issues, a working day for 50,000. Afterwards the app runs on Jira's events, which cost nothing, plus an hourly check of a point or so per active sprint. The budget can be changed on the <a href="admin.html#settings">admin page</a>.</dd>
+
+<dt id="board-missing">A board is missing</dt>
+<dd>Jira shows a board to an app only when the app can see the board's filter. Share the filter with the project or with everyone logged in (<strong>Filters &rarr; the board's filter &rarr; Details &rarr; Edit permissions</strong>), then press <em>Rebuild every tracked board</em> on the admin page.</dd>
+
+<dt id="fields-empty">The fields are empty on the issue view</dt>
+<dd>Either the project is turned off on the admin page, or the fields are not on the issue layout yet. If they have values as columns in the issue search, it is the layout: <a href="fields.html#issue-view">add the fields</a>.</dd>
+
+<dt id="stuck">The reconstruction seems stuck</dt>
+<dd>It pauses when the hourly API budget runs low and resumes within the hour, so a still progress bar is normal on a large site. If nothing has moved for more than an hour, <a href="support.html">tell us</a>.</dd>
+
+<dt id="uninstall">What happens if I uninstall?</dt>
+<dd>The fields disappear from Jira at once. Atlassian keeps the data for about a month so that a site that uninstalled by mistake can recover it, then deletes it. Details in the <a href="privacy.html#retention">privacy policy</a>.</dd>
+</dl>
+
+<h2 id="buying">Price and support</h2>
+<dl class="faq">
+<dt id="price">What does it cost?</dt>
+<dd>During the private beta it is free. When it is listed on the Atlassian Marketplace, sites with up to 10 users stay free, beta sites keep it free for 60 days from the listing date, and the price for larger sites is shown on the listing, with Atlassian's usual free trial.</dd>
+
+<dt id="beta">How do I join the beta?</dt>
+<dd>Sign up at <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">forms.gle/9z8uFRAjMWzuGpSg9</a>; you get one email, with the install link.</dd>
+
+<dt id="help">How do I get help?</dt>
+<dd>Email <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>. The <a href="support.html">support page</a> says how fast you get an answer and what to include.</dd>
+</dl>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

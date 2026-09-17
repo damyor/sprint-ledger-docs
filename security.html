@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security | Sprint Ledger</title>
+<meta name="description" content="How to report a security vulnerability in Sprint Ledger for Jira Cloud, what happens after you do, and how the app is built to keep your Jira data inside Atlassian.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/security">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>Security</h1>
+<p class="byline">Security contact and vulnerability disclosure &middot; updated 17 September 2026</p>
+
+<h2 id="report">Reporting a vulnerability</h2>
+<p>Email <a href="mailto:damyor+sprintledger@gmail.com?subject=Security">damyor+sprintledger@gmail.com</a> with <strong>Security</strong> in the subject line. Please do not open a public GitHub issue or post about it until it is fixed. Tell us what is affected, how to reproduce it, what an attacker could do with it, and how to reach you.</p>
+<p>In scope: the Sprint Ledger app for Jira Cloud and this documentation site. A vulnerability in Jira, in Atlassian's Forge platform or in the Atlassian Marketplace belongs to Atlassian; report it through <a href="https://www.atlassian.com/trust/security/report-a-vulnerability">Atlassian's own process</a>.</p>
+
+<h2 id="after">What happens after you report</h2>
+<ol>
+<li>You get an acknowledgement within two business days.</li>
+<li>We reproduce the issue and rate its severity with CVSS, and tell you the rating.</li>
+<li>We fix it within the time Atlassian's <a href="https://developer.atlassian.com/platform/marketplace/security-bugfix-policy/">Security Bug Fix Policy</a> sets for cloud apps, counted from the report or triage: critical 10 days, high 4 weeks, medium 12 weeks, low 25 weeks. Fixes reach every site as an app update, with nothing for its administrators to do.</li>
+<li>We tell you when the fix is live and agree with you when the issue can be published. With your permission we credit you in the <a href="changelog.html">changelog</a>.</li>
+</ol>
+<p>We do not run a paid bug bounty.</p>
+
+<h2 id="safe-harbour">Good-faith research</h2>
+<p>We will not pursue legal action against research that stays within these rules:</p>
+<ul>
+<li>test only on a Jira Cloud site you own or are authorised to test (a free Jira site is enough to install the app);</li>
+<li>do not access, change or delete data that is not yours, and stop and report as soon as you reach any;</li>
+<li>do not degrade the service for others: no load or denial-of-service testing, no automated scanning of Atlassian's infrastructure;</li>
+<li>no social engineering or phishing, of us or of anyone else;</li>
+<li>give us the time above to fix the issue before disclosing it.</li>
+</ul>
+<p>These rules cannot authorise testing of Atlassian's own systems; Atlassian's terms apply to those.</p>
+
+<h2 id="incidents">If there is a security incident</h2>
+<p>If we learn that your data has been exposed through Sprint Ledger, we tell Atlassian within 48 hours, as the Marketplace Partner Agreement requires, and tell the affected sites as soon as we know which they are, through Atlassian and by email where we have an address: what happened, what data was involved, and what we are doing about it.</p>
+
+<h2 id="design">How the app is built</h2>
+<ul>
+<li><strong>It runs on Atlassian's infrastructure.</strong> Sprint Ledger is a Forge app: its code runs in Atlassian's hosted runtime (Node.js 22) and its data lives in Forge storage attached to your installation. There are no servers of ours and no third-party services.</li>
+<li><strong>Nothing leaves Atlassian.</strong> The app makes no outbound network calls other than to your own Jira site's API. Every production version is checked with Atlassian's <code>forge eligibility</code> command for the Runs on Atlassian programme, which verifies that an app stores its data on Atlassian and does not send it elsewhere.</li>
+<li><strong>It stores as little as it can.</strong> IDs, dates, sprint membership and the values it computes, never summaries, descriptions or comments; the only personal data is the account ID of whoever moved an issue in or out of a sprint, which an administrator can switch off and remove. The <a href="privacy.html">privacy policy</a> has the full list.</li>
+<li><strong>It shows people only what Jira lets them see.</strong> A search that uses its functions or fields returns only the issues the person searching can see, because Jira runs it with their permissions; the admin page is for Jira administrators only; the project page for that project's administrators; the gadget asks Jira whether the viewer can see the board before it shows anything; and the export reads issue summaries from Jira as the person exporting, leaving out issues they cannot see.</li>
+<li><strong>It asks for the permissions its job needs.</strong> Read work items, projects, boards (including their configuration) and sprints; run JQL searches; write Jira work, which it uses only for its own read-only fields and its functions' stored answers; read and write app data; and use Forge storage. The same list is on the consent screen Jira shows when the app is installed.</li>
+<li><strong>It never handles credentials.</strong> It does not ask for, store or log passwords or API tokens; Forge authenticates the app to Jira.</li>
+<li><strong>Dependencies are kept clean.</strong> Production dependencies are kept free of known high and critical vulnerabilities, as Atlassian's security requirements for Marketplace apps ask, and the runtime is a supported Node.js version.</li>
+</ul>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fields | Sprint Ledger</title>
+<meta name="description" content="Reference for Sprint Ledger's ten read-only Jira fields: sprint scope, added and removed dates, sprint start, planned end and completion dates, carry count, original sprint, sprint membership and tags, as columns and in JQL.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/fields">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sprint Ledger fields">
+<meta property="og:description" content="Ten read-only fields that put sprint scope, dates, carry-over and membership into Jira columns and JQL.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/fields">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html" aria-current="page">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>Fields</h1>
+<p class="byline">Reference &middot; updated 17 September 2026 (app version 2.6.0)</p>
+
+<p>Sprint Ledger writes ten read-only fields onto every issue of the projects it tracks that has been in a started sprint. They work as columns in the issue search, sort and filter in JQL, and can be shown on the issue view. Their names all end in "(Ledger)", so they sit together in the column picker and never collide with another app's sprint fields.</p>
+
+<figure>
+<a href="media/fields-in-the-navigator.png"><img src="media/fields-in-the-navigator.png" alt="Jira's issue search running project = SLT AND &quot;Sprint carried (Ledger)&quot; &gt;= 1 ORDER BY &quot;Sprint carried (Ledger)&quot; DESC, key ASC, with the Sprint scope, Sprint carried, Sprint original and Sprint membership columns" width="1567" height="600" loading="lazy"></a>
+<figcaption>A query over the fields alone: the issues that have carried over, most often first.</figcaption>
+</figure>
+
+<h2 id="reference">The ten fields</h2>
+<p>Six of them describe the issue's <strong>latest sprint</strong>: the started sprint with the most recent start date among the sprints the issue counts in, including one it was removed from. Future sprints do not count until they start.</p>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>What it holds</th></tr></thead>
+<tbody>
+<tr id="sprint-scope"><td>Sprint scope (Ledger)</td><td>text</td><td>How the issue took part in its latest sprint: <code>Committed</code>, <code>Added after start</code>, <code>Removed</code> or <code>Added then removed</code></td></tr>
+<tr id="sprint-added"><td>Sprint added (Ledger)</td><td>date and time</td><td>When the issue entered its latest sprint</td></tr>
+<tr id="sprint-removed"><td>Sprint removed (Ledger)</td><td>date and time</td><td>When it left its latest sprint; empty unless it was removed</td></tr>
+<tr id="sprint-start"><td>Sprint start (Ledger)</td><td>date and time</td><td>The start date of the latest sprint</td></tr>
+<tr id="sprint-planned-end"><td>Sprint planned end (Ledger)</td><td>date and time</td><td>The planned end date of the latest sprint, whatever its state</td></tr>
+<tr id="sprint-completed"><td>Sprint completed (Ledger)</td><td>date and time</td><td>The date the latest sprint was completed; empty while it runs</td></tr>
+<tr id="sprint-carried"><td>Sprint carried (Ledger)</td><td>number</td><td>How many closed sprints the issue was in at completion without being done, across its whole history</td></tr>
+<tr id="sprint-original"><td>Sprint original (Ledger)</td><td>text</td><td>The name of the first sprint the issue counted in</td></tr>
+<tr id="sprint-membership"><td>Sprint membership (Ledger)</td><td>text list</td><td>The name of every started sprint the issue has counted in, oldest first, each once, whether it was completed, removed or carried over. Future sprints are in Jira's own Sprint field</td></tr>
+<tr id="sprint-tags"><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint and outcome, which the JQL functions search: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID, for example <code>c:5231</code>. The newest 100 tokens are kept</td></tr>
+</tbody>
+</table>
+<p>"Counts in" means what <a href="classification.html">How Sprint Ledger counts</a> defines: the issue was in the sprint at its start or joined it before it closed, the sprint was not deleted, and the issue is not a subtask, unless an administrator has turned on counting subtasks.</p>
+
+<h2 id="searching">Searching with the fields</h2>
+<p>Use the names in quotes, like any custom field:</p>
+<pre><code>"Sprint start (Ledger)" &gt;= 2026-07-01 AND "Sprint scope (Ledger)" = "Added after start"
+"Sprint membership (Ledger)" = "ACME Sprint 41"
+project = ACME AND "Sprint carried (Ledger)" &gt;= 3 ORDER BY "Sprint carried (Ledger)" DESC
+"Sprint removed (Ledger)" &gt;= -14d
+"Sprint planned end (Ledger)" &lt;= endOfWeek() AND "Sprint completed (Ledger)" is EMPTY AND statusCategory != Done
+"Sprint original (Ledger)" = "ACME Sprint 12" AND statusCategory != Done</code></pre>
+<p>In order: issues added mid-sprint to sprints that started since July; everything that was in ACME Sprint 41 once it started, including what was later removed or carried into the next sprint (Jira's own <code>sprint = "ACME Sprint 41"</code> is what is in it now); the issues that keep rolling over; what was taken out of a sprint in the last two weeks; unfinished work in sprints planned to end this week; and what is still open from a sprint long gone.</p>
+<p>Dates in JQL are read in the time zone of the person searching, as for every Jira date field. For "which issues did something in a given sprint", the <a href="functions.html">JQL functions</a> are the better tool: the fields describe only the latest sprint, while the functions answer for any sprint.</p>
+
+<h2 id="columns">As columns and in exports</h2>
+<p>In the issue search, open the column picker and search for "Ledger". The columns sort like any other, and the text-list fields show their values as lozenges. Neither columns nor JQL need any setup, in company-managed and team-managed projects alike.</p>
+<p>For per-sprint numbers across a whole board, with who changed the scope and when, use the app's own <a href="export.html">CSV export</a> instead.</p>
+
+<h2 id="issue-view">On the issue view</h2>
+<p>Columns and JQL need no setup. To show the fields on the issue itself:</p>
+<ul>
+<li><strong>Team-managed project:</strong> Space settings (Project settings on some sites) &rarr; Fields &rarr; <em>Add field</em>, pick the fields whose names end in "(Ledger)", and drag each one into the layout of every work type that should show it. Until a field is added there, Jira also leaves it out when a tool reads that project's issues through the REST API, although searches and columns already use its values, and the values appear everywhere as soon as it is added.</li>
+<li><strong>Company-managed project:</strong> add the fields to the screen the project uses, as you would any other custom field.</li>
+</ul>
+<p>An empty read-only field shows as "None" on the issue view unless the layout puts it under "Hide when empty".</p>
+
+<h2 id="updates">When the values change</h2>
+<p>The values are written only by the app, in bulk, without adding entries to the issue's history. They follow Jira's own events: an issue dragged into or out of a sprint has its fields updated within a few seconds, and a sprint start or completion within about five. An hourly check compares each active and recently closed sprint with Jira and repairs anything an event missed, and a daily pass rewrites any value that has fallen behind. After the first installation, the fields fill in when the reconstruction reaches its last stage.</p>
+<p>A field stays empty when the issue has never counted in a started sprint, when its project is not tracked, or for a subtask while subtasks are not counted.</p>
+
+<h2 id="renamed">Names before September 2026</h2>
+<p>The field names were settled with the beta sites in September 2026, in the app's 2.6.0 update. A saved filter or automation rule that uses an earlier name shows "Field ... does not exist" until its query uses the new one; Jira does not rename fields inside saved queries. Queries that use only the functions are not affected.</p>
+<table>
+<thead><tr><th>Earlier name</th><th>Name now</th></tr></thead>
+<tbody>
+<tr><td>Added to sprint (Ledger)</td><td>Sprint added (Ledger)</td></tr>
+<tr><td>Removed from sprint (Ledger)</td><td>Sprint removed (Ledger)</td></tr>
+<tr><td>Sprints carried (Ledger)</td><td>Sprint carried (Ledger)</td></tr>
+<tr><td>Original sprint (Ledger)</td><td>Sprint original (Ledger)</td></tr>
+<tr><td>Sprint end (Ledger)</td><td>Sprint completed (Ledger), the completion date only; the planned end is the new Sprint planned end (Ledger)</td></tr>
+<tr><td>Sprint ledger tags</td><td>Sprint tags (Ledger)</td></tr>
+</tbody>
+</table>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

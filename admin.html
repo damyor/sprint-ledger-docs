@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administration | Sprint Ledger</title>
+<meta name="description" content="Administering Sprint Ledger for Jira Cloud: the admin page, tracked projects and boards, reconstructions, the five settings, data and privacy actions, the project settings page, API budget, updates, troubleshooting and uninstalling.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/admin">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html" aria-current="page">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>Administration</h1>
+<p class="byline">For Jira and project administrators &middot; updated 17 September 2026 (app version 2.6.0)</p>
+
+<p>Sprint Ledger needs almost no administration: installing it starts the reconstruction of every sprint board's history, and from then on it keeps itself current. This page covers what there is to look at and change, and what to do when something looks wrong. Installing and the first hours are in <a href="getting-started.html">Getting started</a>.</p>
+
+<ol class="toc">
+<li><a href="#admin-page">The admin page</a></li>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#boards">Boards and reconstructions</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#privacy">Data and privacy</a></li>
+<li><a href="#project-page">The project settings page</a></li>
+<li><a href="#api-budget">Jira's API budget</a></li>
+<li><a href="#updates">Updates</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#uninstall">Uninstalling</a></li>
+</ol>
+
+<h2 id="admin-page">1. The admin page</h2>
+<p><strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. Only Jira administrators can open it. It reads only the app's own storage, so opening or watching it costs no Jira API budget. It takes up to half a minute to appear.</p>
+<figure>
+<a href="media/admin-page.png"><img src="media/admin-page.png" alt="The top of the Sprint Ledger admin page: a green History is complete message with the number of sprints and issues and the last run, three example queries with the site's own sprint names, and the Projects table with a tracking switch per project" width="1512" height="807" loading="lazy"></a>
+<figcaption>The top of the admin page on the demo site.</figcaption>
+</figure>
+<p id="first-run">At the top, a message says where the history stands:</p>
+<ul>
+<li><strong>No reconstruction has run yet</strong>: nothing has been read; start one with <em>Rebuild every tracked board</em>.</li>
+<li><strong>Reconstruction in progress</strong>: the stage, the tracked boards, the issues read so far, a progress bar, and an estimate of the time left once the run is about 5% in. <strong>Classifying every sprint again</strong> is the shorter run a settings change starts.</li>
+<li><strong>History is complete</strong>: how many sprints and issues the ledger holds, and what the last run took and spent.</li>
+<li><strong>The last reconstruction failed</strong>: the error and the stage. A failed run starts again by itself once after each app update, which is how a fix reaches your site; see <a href="#troubleshooting">Troubleshooting</a>.</li>
+</ul>
+<p>Once a sprint has been classified, <em>Try it in the issue search</em> offers three queries with your site's own sprint names to paste into the JQL search.</p>
+
+<h2 id="projects">2. Projects</h2>
+<p>Sprint Ledger tracks every project that has a board with sprints, unless you choose otherwise. <em>Every project with a sprint board</em> keeps it that way, including projects created later; turning it off lets you switch projects on and off one by one.</p>
+<p>A project appears in the list once the app can see one of its boards. The app writes no field values into a project that is turned off, and its issues never appear in the functions' answers. Turning a project off stops following it; the values already on its issues stay but are no longer kept current. Turning it back on marks its boards as not read, and reading them again brings its history up to date.</p>
+
+<h2 id="boards">3. Boards and reconstructions</h2>
+<p>The boards table lists each board the app has found, its project, how many sprints it has, and its state: <code>pending</code> (not read yet), <code>running</code>, <code>waiting</code> (for the hourly API budget), <code>done</code>, <code>failed</code>, or <code>no sprints</code> for a board that does not use sprints, such as a Kanban board, which is skipped.</p>
+<ul>
+<li><strong>Re-run</strong> on a board reads that board's history again.</li>
+<li><strong>Rebuild every tracked board</strong> reads the history of every tracked board again.</li>
+</ul>
+<p>Both are safe at any time: the ledger is rewritten in place, never duplicated, and the run pauses itself when the hourly API budget runs low and resumes on its own. A run reads only what it must: re-running one board classifies that board's sprints and the sprints its issues were also in, not the whole site. <em>Last run</em> shows each stage of the latest run with what it processed, the API points it spent and how long it took.</p>
+<p>You rarely need either. The ledger is kept current from Jira's own events, an hourly check compares every active and recently closed sprint with Jira and repairs what an event missed, and a daily pass tidies up and refreshes the stored answers of the JQL functions.</p>
+
+<h2 id="settings">4. Settings</h2>
+<figure>
+<a href="media/admin-settings.png"><img src="media/admin-settings.png" alt="The settings section of the admin page: Done at sprint close with two options, the Subtasks toggle, the Deep backfill window select, the Who moved each issue toggle and the Hourly API budget select" width="1568" height="743" loading="lazy"></a>
+<figcaption>The five settings, at their defaults.</figcaption>
+</figure>
+<table>
+<thead><tr><th>Setting</th><th>Choices</th><th>A change</th></tr></thead>
+<tbody>
+<tr id="setting-done"><td><strong>Done at sprint close</strong>: which issues count as completed when a sprint closes, and so what say/do, <code>completedIn()</code> and <code>carriedOverFrom()</code> answer</td><td>The board's rightmost column, as the Sprint Report counts it (default); or any status in the Done category, which does not change when the board's columns are rearranged</td><td>Classifies every sprint again from the stored history, without reading Jira; minutes, not hours</td></tr>
+<tr id="setting-subtasks"><td><strong>Subtasks</strong>: whether subtasks count in the ledger</td><td>Off (default), as in the Sprint Report; their history is stored either way</td><td>Classifies every sprint again, as above</td></tr>
+<tr id="setting-deep"><td><strong>Deep backfill window</strong>: how far back the reconstruction looks for issues that were removed from every sprint they were in, whose Sprint field is therefore empty</td><td>Off; 6, 12 (default), 24 or 36 months before the first sprint; or every issue without a sprint, which is slow on a large site</td><td>Applies to the next reconstruction</td></tr>
+<tr id="setting-actors"><td><strong>Who moved each issue</strong>: store the account ID of whoever added an issue to a sprint or removed it, for the export's "added by" and "removed by" columns</td><td>On (default) or off</td><td>Applies from then on; IDs already stored stay until you anonymise them</td></tr>
+<tr id="setting-budget"><td><strong>Hourly API budget</strong>: Jira API points an hour the reconstruction and the hourly check may spend</td><td>6,000 to 60,000; default 12,000, about 6,000 issues an hour</td><td>Applies from the next hour of a run</td></tr>
+</tbody>
+</table>
+<p>The first two are locked while a reconstruction runs, so that every sprint is classified the same way.</p>
+
+<h2 id="privacy">5. Data and privacy</h2>
+<p>The panel says what the app stores and how much of it there is now. Two actions, each behind a confirmation:</p>
+<ul>
+<li><strong>Anonymise user ids</strong> removes every stored account ID and turns their capture off. Counts, dates and JQL answers do not change.</li>
+<li><strong>Delete all ledger data</strong> removes every row the app holds for the site and keeps the settings. The values already written into the ten fields stay on the issues until a new reconstruction rewrites them.</li>
+</ul>
+<p>What is stored, where and for how long is in the <a href="privacy.html">privacy policy</a>. The <em>Licence</em> panel below it shows the site's licence; during the private beta an install needs none.</p>
+
+<h2 id="project-page">6. The project settings page</h2>
+<p><strong>Space settings</strong> (<strong>Project settings</strong> on some sites) &rarr; <strong>Apps</strong> &rarr; <strong>Sprint Ledger</strong>. A project's own administrators can use it without a Jira administrator, as can Jira administrators. It takes 15 to 20 seconds to appear.</p>
+<ul>
+<li><strong>Tracking</strong> turns Sprint Ledger on or off for the project. On a site that tracks every project, only a Jira administrator can take one out, from the admin page.</li>
+<li><strong>Boards</strong> lists the project's boards, their sprints and how far each board's history has been read: Not read yet, Reading, Waiting for API budget, Read, Failed or No sprints. <em>Read the history of N boards</em> reads the boards not read yet, and the page follows the run to the end.</li>
+<li><strong>Export</strong> downloads a board's sprints or one sprint's issues as CSV; see <a href="export.html">CSV export</a>.</li>
+</ul>
+<figure>
+<a href="media/project-settings-page.png"><img src="media/project-settings-page.png" alt="The Sprint Ledger project settings page with the tracking switch, the boards table and the export section" width="1288" height="852" loading="lazy"></a>
+<figcaption>The project settings page on the demo site.</figcaption>
+</figure>
+
+<h2 id="api-budget">7. Jira's API budget</h2>
+<p>Jira limits how much every app may call its API, in points an hour, and the limit is shared by every site an app is installed on. A first reconstruction costs about two points per issue that has ever been in a sprint; a site of 20,000 such issues takes three to four hours at the default budget. After that the app costs little: events cost nothing, and the hourly check spends about a point per active sprint.</p>
+<p>The default of 12,000 points an hour leaves room for other sites' first reconstructions. Raise it on the admin page if your first reconstruction is large and you want it sooner; the run slows down rather than fails when the budget is spent.</p>
+
+<h2 id="updates">8. Updates</h2>
+<p>Updates install on your site by themselves, with nothing for you to do: new fields, functions and fixes have all arrived that way during the beta. An update that asks for a new permission would appear in Jira's app management for an administrator to accept; the first one expected is licensing, when the app is listed on the Marketplace. The <a href="changelog.html">changelog</a> lists every update.</p>
+
+<h2 id="troubleshooting">9. Troubleshooting</h2>
+<dl class="faq">
+<dt id="board-missing">A board is missing from the table</dt>
+<dd>Jira shows a board to an app only when the app can see the board's filter. Open <strong>Filters &rarr; the board's filter &rarr; Details &rarr; Edit permissions</strong>, share the filter with the project or with everyone logged in, then press <em>Rebuild every tracked board</em>.</dd>
+<dt id="fields-empty">The fields are empty on the issue view</dt>
+<dd>If the project is turned off, the app writes nothing to it. If it is on and the fields have values as columns in the issue search, they are not on the issue layout yet: see <a href="fields.html#issue-view">the fields on the issue view</a>.</dd>
+<dt id="stuck">The reconstruction does not move</dt>
+<dd>A run pauses when the hourly API budget runs low and resumes within the hour, so a progress bar that stands still for a while is normal on a large site. If it has not moved for more than an hour, write to <a href="support.html">support</a> with the time; a stalled run can be resumed without repeating the work done.</dd>
+<dt id="failed">The last reconstruction failed</dt>
+<dd>A failed run starts again by itself once after each app update, which is how a fix reaches you. To start again sooner, press <em>Forget this run</em> and then <em>Rebuild every tracked board</em>; if it fails the same way, send the error shown to <a href="support.html">support</a>.</dd>
+<dt id="function-names">"Another app owns some JQL function names"</dt>
+<dd>A function name can belong to only one app on a Jira site, and Jira lists the names shown as another installed app's. Those names do not reach Sprint Ledger; its fields, its other functions and the gadget are unaffected. Tell <a href="support.html">support</a> which app it is.</dd>
+<dt id="numbers">A number differs from the Sprint Report</dt>
+<dd>Three differences are expected; they are listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>. Anything else is a bug worth reporting.</dd>
+</dl>
+
+<h2 id="uninstall">10. Uninstalling</h2>
+<p>Uninstall from Jira's app management like any other app. The ten fields disappear from Jira at once. Atlassian keeps the fields' values for 30 days and the app's storage for 28 days so that a site that uninstalled by mistake can get them back, then deletes both for good; the <a href="privacy.html#retention">privacy policy</a> has the details. To remove the ledger without uninstalling, use <a href="#privacy">Delete all ledger data</a>.</p>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>

@@ -5,29 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy | Sprint Ledger</title>
 <meta name="description" content="What Sprint Ledger for Jira stores, where it stores it, who can see it, and how to have it deleted.">
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
-  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
-  h2 { font-size: 1.35rem; margin-top: 2.2rem; }
-  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
-  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
-  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
-  pre { background: #f4f5f7; padding: 0.8rem 1rem; border-radius: 3px; overflow-x: auto; font-size: 0.88rem; line-height: 1.45; }
-  pre code { background: none; padding: 0; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
-  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
-  th { background: #f4f5f7; }
-  a { color: #0052cc; }
-  nav { font-size: 0.9rem; color: #6b778c; }
-  ol.toc { color: #42526e; }
-  .note { background: #f4f5f7; border-left: 3px solid #0052cc; padding: 0.6rem 1rem; margin: 1.2rem 0; }
-  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
-</style>
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/privacy">
+<link rel="stylesheet" href="assets/docs.css">
 </head>
 <body>
-<nav><a href="./">Sprint Ledger</a> / Privacy policy</nav>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
 <h1>Privacy policy</h1>
-<p class="byline">Sprint Ledger for Jira Cloud &middot; in effect 12 September 2026</p>
+<p class="byline">Sprint Ledger for Jira Cloud &middot; in effect 17 September 2026 (the previous version was in effect from 12 September 2026)</p>
 
 <p>Sprint Ledger is published by <strong>Yord Soft</strong> (Damian Plamenov Yordanov), and this policy covers the Sprint Ledger app for Jira Cloud. It describes what the app stores, where it is stored, who can reach it and how to have it removed. Questions and requests: <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>.</p>
 
@@ -52,21 +52,29 @@
 
 <h2 id="where">Where the data lives</h2>
 <p>All of it lives in Forge storage &mdash; Forge SQL and the Forge key-value store &mdash; provisioned by Atlassian for your installation of the app and reachable only by that installation. It therefore sits inside Atlassian's infrastructure and follows your site's data residency. The app holds no database, no object store and no account of its own, and it makes no network call to any host other than your own Jira site's API.</p>
+<p><strong>Countries.</strong> Atlassian hosts Forge storage on Amazon Web Services in the data residency location of your Jira site: Australia, Canada, the European Union, Germany, India, Japan, Singapore, South Korea, Switzerland, the United Kingdom or the United States, as your site's administrators have chosen. A site with no location chosen is in Atlassian's global location, where Atlassian decides the region and may move data between regions. Atlassian's <a href="https://developer.atlassian.com/platform/forge/data-residency/">data residency documentation for Forge</a> lists the regions behind each location.</p>
 <p>Sprint Ledger is eligible for Atlassian's <a href="https://go.atlassian.com/runs-on-atlassian">Runs on Atlassian</a> programme, which is Atlassian's own check that an app stores its data on Atlassian infrastructure and egresses nothing.</p>
 
 <h2 id="who">Who can see it</h2>
-<p>Inside your site, the app shows a person only what Jira already lets them see: its JQL functions and custom fields run under the permissions of the user running the query, and the admin page refuses anyone who is not a Jira administrator.</p>
+<p>Inside your site, the app shows a person only what Jira already lets them see: its JQL functions and custom fields run under the permissions of the user running the query, the admin page refuses anyone who is not a Jira administrator, the project settings page is open only to that project's administrators, and the dashboard gadget and the CSV export show a board's numbers only to people who can see the board.</p>
 <p>As the app's developer we can read the app's runtime <strong>logs</strong> through Atlassian's developer console. The app writes IDs, counts, durations and error messages to those logs, deliberately never issue content; Atlassian retains them for a limited period and we use them only to see that installs and reconstructions are healthy and to diagnose faults. We cannot read your Forge storage, your issues or your sprints.</p>
 <p>We do not sell, share or transfer any of this data, and there are no sub-processors: no analytics, no error-reporting service, no advertising, no tracking of any kind.</p>
 
 <h2 id="retention">How long it is kept, and deletion</h2>
 <p>The record is kept for as long as the app is installed, because it is the app's whole purpose: a sprint closed in 2021 is still the answer to a question asked in 2026. Housekeeping trims only its own by-products &mdash; finished run records after 14 days, hourly usage counters after 48 hours.</p>
-<p><strong>Uninstalling the app removes the installation and the Forge storage that belongs to it.</strong> The eight custom fields the app wrote into your issues are removed with the app's fields. If you want the ledger deleted while keeping the app installed, a Jira administrator uses &ldquo;Delete all ledger data&rdquo; on the admin page: it removes every row the app holds for the site and keeps only the settings. The values already written into the eight custom fields stay on the issues until a new reconstruction rewrites them, and uninstalling removes the fields themselves.</p>
+<p><strong>When the app is uninstalled,</strong> its ten custom fields disappear from Jira at once, and Atlassian deletes the data that belonged to the installation after a retention period: the fields' values are permanently deleted after 30 days, and the app's Forge storage after 28 days. The period exists so that a site that uninstalled by mistake can recover: reinstalling within 30 days brings the fields back with their values, and the stored ledger can be relinked to the new installation on a request made within 21 days (write to us or to Atlassian support). After those periods neither can be recovered.</p>
+<p>If you want the ledger deleted while keeping the app installed, a Jira administrator uses &ldquo;Delete all ledger data&rdquo; on the admin page: it removes every row the app holds for the site and keeps only the settings. The values already written into the ten custom fields stay on the issues until a new reconstruction rewrites them or the app is uninstalled.</p>
 <p>To ask what is held about a particular account ID, to have it removed, or to exercise any other right you have under applicable data protection law, write to <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>. During the beta you get an answer the same day.</p>
 
 <h2 id="changes">Changes to this policy</h2>
 <p>If what the app stores changes, this page changes with it and the date at the top moves. Beta sites are told by email when a change affects what is stored.</p>
+<p>What changed on 17 September 2026: the countries where the data is stored; the retention periods Atlassian applies after an uninstall, which the previous version described as immediate deletion; the number of fields, ten since the app's 2.6.0 update. What the app stores did not change.</p>
 
-<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. <a href="./">Home</a> &middot; <a href="getting-started.html">Getting started</a></footer>
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
 </body>
 </html>

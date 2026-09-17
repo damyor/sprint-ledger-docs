@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JQL functions | Sprint Ledger</title>
+<meta name="description" content="Reference for Sprint Ledger's nine JQL functions: addedAfterSprintStart, removedFromSprint, committedTo, completedIn, carriedOverFrom, carriedOver, sprintsNamed, openSprintsNamed and futureSprintsNamed, with arguments, patterns, errors and examples.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/functions">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sprint Ledger JQL functions">
+<meta property="og:description" content="Nine JQL functions for sprint scope change and carry-over in Jira Cloud, with arguments, patterns and examples.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/functions">
+<meta property="og:site_name" content="Sprint Ledger">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<!-- site:header -->
+<header class="site">
+  <a class="brand" href="./">Sprint Ledger</a>
+  <nav aria-label="Documentation">
+    <a href="getting-started.html">Getting started</a>
+    <a href="functions.html" aria-current="page">JQL functions</a>
+    <a href="fields.html">Fields</a>
+    <a href="gadget.html">Gadget</a>
+    <a href="export.html">CSV export</a>
+    <a href="classification.html">How it counts</a>
+    <a href="admin.html">Administration</a>
+    <a href="faq.html">FAQ</a>
+    <a href="support.html">Support</a>
+  </nav>
+</header>
+<!-- /site:header -->
+
+<h1>JQL functions</h1>
+<p class="byline">Reference &middot; updated 17 September 2026 (app version 2.6.0)</p>
+
+<p>Sprint Ledger adds nine functions to Jira's query language. Each one is written <code>issue in f(...)</code> or <code>issue not in f(...)</code>, and works wherever JQL works: the issue search, saved filters, board filters, dashboard gadgets, automation rules and filter subscriptions. Combine them with any other clause.</p>
+
+<figure>
+<a href="media/functions-in-the-navigator.png"><img src="media/functions-in-the-navigator.png" alt="Jira's issue search running issue in committedTo(&quot;SLT Sprint 3&quot;) AND issue not in completedIn(&quot;SLT Sprint 3&quot;), with seven results and the Sprint scope, Sprint carried, Sprint original and Sprint membership columns" width="1568" height="538" loading="lazy"></a>
+<figcaption>What was committed to a sprint and not finished in it, on the demo site, with four of the app's fields as columns.</figcaption>
+</figure>
+
+<ol class="toc">
+<li><a href="#overview">The functions at a glance</a></li>
+<li><a href="#arguments">The sprint and board arguments</a></li>
+<li><a href="#history">The six history functions</a></li>
+<li><a href="#named">The three name-and-state functions</a></li>
+<li><a href="#errors">Messages in the JQL editor</a></li>
+<li><a href="#saved">Saved filters, boards and automation</a></li>
+<li><a href="#examples">More examples</a></li>
+</ol>
+
+<h2 id="overview">1. The functions at a glance</h2>
+<table>
+<thead><tr><th>Function</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><a href="#addedAfterSprintStart"><code>addedAfterSprintStart(sprint?, board?)</code></a></td><td>Issues that joined the sprint after it started</td></tr>
+<tr><td><a href="#removedFromSprint"><code>removedFromSprint(sprint?, board?)</code></a></td><td>Issues taken out after it started and before it closed</td></tr>
+<tr><td><a href="#committedTo"><code>committedTo(sprint?, board?)</code></a></td><td>Issues that were in the sprint the moment it started</td></tr>
+<tr><td><a href="#completedIn"><code>completedIn(sprint?, board?)</code></a></td><td>Issues in the sprint at completion whose status counted as done</td></tr>
+<tr><td><a href="#carriedOverFrom"><code>carriedOverFrom(sprint?, board?)</code></a></td><td>Issues in the sprint at completion that were not done</td></tr>
+<tr><td><a href="#carriedOver"><code>carriedOver(n)</code></a></td><td>Issues that have rolled out of at least <em>n</em> closed sprints</td></tr>
+<tr><td><a href="#sprintsNamed"><code>sprintsNamed(sprint, board?)</code></a></td><td>Issues in the named sprints now</td></tr>
+<tr><td><a href="#openSprintsNamed"><code>openSprintsNamed(sprint, board?)</code></a></td><td>The same, for those of the sprints that are active</td></tr>
+<tr><td><a href="#futureSprintsNamed"><code>futureSprintsNamed(sprint, board?)</code></a></td><td>The same, for those of the sprints that have not started</td></tr>
+</tbody>
+</table>
+<p>The first six answer from the sprint history the app reconstructs, so they know what happened inside sprints that closed years ago. The last three answer with Jira's own Sprint field, so they are about what is in the sprints now. What "added", "removed", "committed" and "done" mean exactly, and where the answers can differ from Jira's Sprint Report, is on <a href="classification.html">How Sprint Ledger counts</a>.</p>
+
+<h2 id="arguments">2. The sprint and board arguments</h2>
+<table>
+<thead><tr><th>You write</th><th>It means</th></tr></thead>
+<tbody>
+<tr><td><code>"Sprint 42"</code></td><td>Every sprint with that name, on any board. Upper and lower case are ignored, as in Jira's own <code>sprint = "..."</code>.</td></tr>
+<tr><td><code>"Dev: 25_1*"</code></td><td>A pattern: every sprint whose name matches. <code>*</code> stands for any run of characters and is the only wildcard; <code>_</code>, <code>?</code> and every other character mean themselves. Patterns cover the sprints of the projects Sprint Ledger tracks.</td></tr>
+<tr><td><code>5231</code></td><td>The sprint with that ID. Use it when several boards share a sprint name and you want only one.</td></tr>
+<tr><td>nothing: <code>addedAfterSprintStart()</code></td><td>Every active sprint of the tracked projects. Only the six history functions accept this; the three name-and-state functions need a sprint.</td></tr>
+<tr><td><code>"Sprint 7", "ACME board"</code></td><td>A board name as the second argument narrows a name or a pattern to that board's sprints.</td></tr>
+</tbody>
+</table>
+<p>A name or a pattern that matches more than 200 sprints is refused with a message asking you to narrow it, rather than answered from part of the list. A sprint created or renamed so that it matches a pattern is included within seconds, including in saved filters.</p>
+
+<h2 id="history">3. The six history functions</h2>
+
+<h3 id="addedAfterSprintStart"><code>addedAfterSprintStart(sprint?, board?)</code></h3>
+<p>Issues whose membership of the sprint began after the sprint's start and before its completion: the asterisked issues of Jira's Sprint Report. An issue that was in the sprint at the start, was taken out and was put back counts as committed, not added, exactly as the report treats it.</p>
+<pre><code>project = ACME AND issue in addedAfterSprintStart("ACME Sprint 42")
+sprint in openSprints() AND issue in addedAfterSprintStart()</code></pre>
+
+<h3 id="removedFromSprint"><code>removedFromSprint(sprint?, board?)</code></h3>
+<p>Issues that were in the sprint at some point after it started and were no longer in it when it completed, or are no longer in it now, for an active sprint. That includes issues added after the start and removed again; Jira's report lists those only as removed, Sprint Ledger answers both questions.</p>
+<pre><code>issue in removedFromSprint("ACME Sprint 41") AND issue not in committedTo("ACME Sprint 42")</code></pre>
+<p>That one is the query people ask for most: what was dropped from last sprint and not picked up in this one.</p>
+
+<h3 id="committedTo"><code>committedTo(sprint?, board?)</code></h3>
+<p>Issues that were in the sprint at the moment it started, whatever happened to them afterwards.</p>
+<pre><code>issue in committedTo("ACME Sprint 41") AND issue not in completedIn("ACME Sprint 41")</code></pre>
+
+<h3 id="completedIn"><code>completedIn(sprint?, board?)</code></h3>
+<p>Issues that were in the sprint when it was completed and whose status then counted as done: by default a status in the board's rightmost column, as the Sprint Report counts it, or any status in the Done category if an administrator has chosen that on the <a href="admin.html#settings">admin page</a>. It answers for closed sprints only: while a sprint runs, which issues it will complete is not decided yet.</p>
+
+<h3 id="carriedOverFrom"><code>carriedOverFrom(sprint?, board?)</code></h3>
+<p>Issues that were in the sprint when it was completed and were not done: the report's "Issues Not Completed". Closed sprints only, like <code>completedIn</code>.</p>
+<pre><code>issue in carriedOverFrom("Dev: 25_1*") AND issue not in completedIn("Dev: 25_1*")</code></pre>
+<p>Work that carried out of one of a quarter's sprints and was not finished in any of them.</p>
+
+<h3 id="carriedOver"><code>carriedOver(n)</code></h3>
+<p>Issues that have been carried out of at least <em>n</em> closed sprints, counting every sprint they were ever in. <em>n</em> is a whole number of at least 1. The same count is the <a href="fields.html#sprint-carried">Sprint carried (Ledger)</a> field, which is handy for sorting.</p>
+<pre><code>issue in carriedOver(2) AND statusCategory != Done ORDER BY "Sprint carried (Ledger)" DESC</code></pre>
+
+<h2 id="named">4. The three name-and-state functions</h2>
+<p>These answer "what is in these sprints now", by name or pattern and by state. The app turns the argument into Jira's own <code>sprint in (...)</code> list for you, with the state applied before Jira sees the list. That is what makes a dashboard of a team's active sprints exact: <code>sprint in openSprints()</code> next to a separate name condition also matches an issue that moved from a closed "Plan" sprint into an open "Dev" sprint, because Jira checks each condition against all of an issue's sprints.</p>
+
+<h3 id="sprintsNamed"><code>sprintsNamed(sprint, board?)</code></h3>
+<p>Issues in the named sprints now, whatever the sprints' state.</p>
+<pre><code>issue in sprintsNamed("Dev: 26_*") AND statusCategory != Done</code></pre>
+
+<h3 id="openSprintsNamed"><code>openSprintsNamed(sprint, board?)</code></h3>
+<p>Issues in those of the named sprints that are active.</p>
+
+<h3 id="futureSprintsNamed"><code>futureSprintsNamed(sprint, board?)</code></h3>
+<p>Issues in those of the named sprints that have not started.</p>
+<pre><code>issue in openSprintsNamed("Dev: *") OR issue in futureSprintsNamed("Dev: *")</code></pre>
+<p>A filter for the active and upcoming sprints of every board that names its sprints "Dev: YY_MM", with no list of sprints to keep up to date. When none of the named sprints is in the state, between two sprints for example, the answer is empty rather than an error. Jira refuses a sprint the person searching cannot see, so if some of a pattern's sprints sit on boards not everyone can see, narrow the pattern or add the board name.</p>
+
+<h2 id="errors">5. Messages in the JQL editor</h2>
+<p>When an argument cannot be answered, the JQL editor shows a message instead of an empty result:</p>
+<table>
+<thead><tr><th>Message</th><th>What to do</th></tr></thead>
+<tbody>
+<tr><td>Sprint Ledger: no sprint named 'Sprnt 42'. Check the spelling or use the sprint ID.</td><td>Check the name. A sprint on a board Sprint Ledger has never read is not in its history; the <a href="admin.html#boards">admin page</a> lists the boards it has read.</td></tr>
+<tr><td>Sprint Ledger: no sprint matches 'Dev: 27_*'. Check the spelling or use the sprint ID.</td><td>The same, for a pattern.</td></tr>
+<tr><td>Sprint Ledger: more than 200 sprints match 'SLT*'. Narrow the pattern or name a board.</td><td>Make the pattern more specific, or add a board name.</td></tr>
+<tr><td>Sprint Ledger: more than 200 sprints are named 'Sprint 1'. Use the sprint ID.</td><td>Use the ID, or add a board name.</td></tr>
+<tr><td>Sprint Ledger: no board named 'ACME bord'.</td><td>Check the board's name as Jira shows it.</td></tr>
+<tr><td>Sprint Ledger: no active sprint found. Name a sprint or use its ID.</td><td>The empty argument means "every active sprint", and there is none right now.</td></tr>
+<tr><td>Sprint Ledger: carriedOver(n) needs a whole number of sprints of at least 1, for example carriedOver(2).</td><td>Give <em>n</em> as 1, 2, 3 and so on.</td></tr>
+<tr><td>Sprint Ledger: the sprint history has not been reconstructed yet. Try again in a few minutes.</td><td>The first reconstruction after installing is still running; the <a href="admin.html#first-run">admin page</a> shows its progress.</td></tr>
+</tbody>
+</table>
+
+<h2 id="saved">6. Saved filters, boards and automation</h2>
+<p>Jira keeps the answer to a function call and reuses it in saved filters, board filters, gadgets and automation conditions without asking the app again. Sprint Ledger updates those stored answers itself: when a sprint starts or completes, when a sprint is created, renamed or deleted, and once a day for everything. So a saved filter with <code>addedAfterSprintStart()</code> follows the new sprint within seconds of it starting, and a pattern picks up a new matching sprint just as quickly.</p>
+<p>The functions answer for the projects Sprint Ledger tracks; an issue of a project that is turned off on the <a href="admin.html#projects">admin page</a> is never returned. Subtasks are left out unless an administrator has turned on counting them, which is also how Jira's Sprint Report treats them.</p>
+
+<h2 id="examples">7. More examples</h2>
+<pre><code>issue in committedTo("ACME Sprint 41") AND issue in removedFromSprint("ACME Sprint 41")
+issue in addedAfterSprintStart("Sprint 7", "ACME board")
+project = ACME AND issue in carriedOver(3) ORDER BY "Sprint carried (Ledger)" DESC
+issue in completedIn("ACME Sprint 41") AND issue in addedAfterSprintStart("ACME Sprint 41")
+issue in openSprintsNamed("Plan: *") AND assignee = currentUser()</code></pre>
+<p>In order: what was committed and then taken out; what was added to a sprint of one board when several boards use the same names; the work that keeps rolling over; what was added mid-sprint and still finished; and your own work in the active planning sprints. Queries over the fields alone, with dates, are on the <a href="fields.html#searching">fields page</a>.</p>
+
+<!-- site:footer -->
+<footer class="site">
+  <p>Sprint Ledger for Jira Cloud, by Yord Soft. An independent app, not affiliated with Atlassian.</p>
+  <p><a href="changelog.html">Changelog</a> &middot; <a href="support.html">Support</a> &middot; <a href="security.html">Security</a> &middot; <a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms of use</a></p>
+</footer>
+<!-- /site:footer -->
+</body>
+</html>
