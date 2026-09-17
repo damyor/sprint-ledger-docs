@@ -60,7 +60,7 @@
 <ul>
 <li><strong>As JQL</strong>: <code>issue in removedFromSprint("Sprint 41")</code> returns the issues taken out after the start and before the completion. Without an argument it means the active sprints, and a name with <code>*</code> covers a series: <code>issue in removedFromSprint("Team A Sprint *")</code>.</li>
 <li><strong>Combined with the other functions</strong>: <code>issue in removedFromSprint("Sprint 41") AND issue not in committedTo("Sprint 42")</code> is what was dropped and not picked back up in the next sprint.</li>
-<li><strong>As columns</strong>: "Sprint scope (Ledger)" says Removed or Added then removed, and "Removed from sprint (Ledger)" holds the date, so <code>"Removed from sprint (Ledger)" &gt;= -14d</code> is an ordinary filter and a sortable column.</li>
+<li><strong>As columns</strong>: "Sprint scope (Ledger)" says Removed or Added then removed, and "Sprint removed (Ledger)" holds the date, so <code>"Sprint removed (Ledger)" &gt;= -14d</code> is an ordinary filter and a sortable column.</li>
 </ul>
 <p>It is retroactive for every sprint the site has run and follows the Sprint Report's definitions, with the differences documented. One of them is deliberate: an issue added after the start and removed again counts as both added and removed, because reporting on scope change needs both. It runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
 

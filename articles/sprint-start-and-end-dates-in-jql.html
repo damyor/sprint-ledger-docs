@@ -49,16 +49,17 @@
 <p>Sprint Organizer (Apps Dynamic) is a Forge app with the Runs on Atlassian badge whose listing describes custom JQL fields for the sprint's name, state, goal, dates and board, closed sprints and sprint history. If what you want is the sprint's own attributes as fields, including the goal, it is aimed squarely at this question. Check its listing for the price and for how it treats sprints that closed before it was installed.</p>
 
 <h2>4. Sprint Ledger (the one I am building)</h2>
-<p>Sprint Ledger is a Forge app that reconstructs every sprint's history from the changelog and keeps it current from Jira's events. Among its eight read-only fields are two for dates:</p>
+<p>Sprint Ledger is a Forge app that reconstructs every sprint's history from the changelog and keeps it current from Jira's events. Among its ten read-only fields are three for dates:</p>
 <ul>
 <li><strong>"Sprint start (Ledger)"</strong>: the start date of the issue's latest sprint.</li>
-<li><strong>"Sprint end (Ledger)"</strong>: the planned end while that sprint runs and the completion date once it has closed, which is the semantics the first beta site asked for.</li>
+<li><strong>"Sprint planned end (Ledger)"</strong>: that sprint's planned end date.</li>
+<li><strong>"Sprint completed (Ledger)"</strong>: the date that sprint was completed, empty while it runs. The first beta site asked for the planned and the actual end as two separate fields.</li>
 </ul>
-<p>Both work in JQL, sort, and show as columns and in anything that reads fields:</p>
+<p>All three work in JQL, sort, and show as columns and in anything that reads fields:</p>
 <ul>
 <li><code>"Sprint start (Ledger)" &gt;= startOfMonth(-3) ORDER BY "Sprint start (Ledger)" DESC</code>: every issue whose latest sprint started in the last three months.</li>
-<li><code>sprint in openSprints() AND "Sprint end (Ledger)" &lt;= endOfWeek() AND statusCategory != Done</code>: unfinished work in the sprints that end this week.</li>
-<li><code>"Sprint end (Ledger)" &lt; now() AND statusCategory != Done</code>: unfinished issues whose last sprint is already over.</li>
+<li><code>sprint in openSprints() AND "Sprint planned end (Ledger)" &lt;= endOfWeek() AND statusCategory != Done</code>: unfinished work in the sprints planned to end this week.</li>
+<li><code>"Sprint completed (Ledger)" &lt; now() AND statusCategory != Done</code>: unfinished issues whose last sprint is already over.</li>
 </ul>
 <p>The values are filled for the site's whole sprint history when the app is installed, without a rule run per issue, and a date edited on a running or closed sprint reaches its issues' fields within seconds, from Jira's own sprint event. The fields describe the issue's <em>latest</em> sprint, so a story that rolled over shows the newer sprint's dates, and the rest of the history is in the other fields and the JQL functions (<code>committedTo</code>, <code>addedAfterSprintStart</code>, <code>removedFromSprint</code>, <code>completedIn</code>, <code>carriedOverFrom</code>, <code>carriedOver(n)</code>). It runs entirely inside Atlassian's infrastructure. It is in private beta now and will be on the Marketplace this autumn, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
 <figure style="margin:1.5rem 0">
@@ -74,7 +75,7 @@
 <tr><td>Dates as columns and in exports</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
 <tr><td>Issues from past sprints</td><td>yes, by name</td><td>only after a backfill run</td><td>see the listing</td><td>yes</td></tr>
 <tr><td>Follows a sprint whose dates are edited</td><td>does not apply</td><td>no</td><td>see the listing</td><td>yes</td></tr>
-<tr><td>Completion date of a closed sprint</td><td>no</td><td>a third field and rule</td><td>see the listing</td><td>yes, in "Sprint end"</td></tr>
+<tr><td>Completion date of a closed sprint</td><td>no</td><td>a third field and rule</td><td>see the listing</td><td>yes, in "Sprint completed"</td></tr>
 <tr><td>Scope change: added, removed, carried over</td><td>carry-over only</td><td>no</td><td>not listed</td><td>yes</td></tr>
 <tr><td>Cost for 100 users</td><td>free</td><td>free (rule runs)</td><td>see the listing</td><td>about $50 a month</td></tr>
 </tbody></table>
