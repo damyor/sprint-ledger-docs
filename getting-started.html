@@ -37,6 +37,7 @@
 <li><a href="#check-two">Two things to check first</a></li>
 <li><a href="#fields">The eight fields</a></li>
 <li><a href="#functions">The six JQL functions</a></li>
+<li><a href="#gadget">The dashboard gadget</a></li>
 <li><a href="#beta">What is not there yet</a></li>
 <li><a href="#accuracy">Checking the numbers against the Sprint Report</a></li>
 <li><a href="#privacy">Privacy, data and uninstalling</a></li>
@@ -52,7 +53,7 @@
 <p>The app reads the changelog of every issue that has ever been in a sprint and rebuilds, sprint by sprint, who was in it at the start, what arrived later, what left, what was finished and what rolled over.</p>
 <p>Watch it at <strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. The page shows a progress banner with an estimate (it appears once the run is about 5% in, because the first stages are dominated by scheduling), and a table of every board it has discovered with its sprint count and state, plus a <em>Re-run</em> button per board and <em>Rebuild every tracked board</em>. A board whose project does not use sprints, such as a team-managed Kanban board, is listed as <em>no sprints</em> and skipped.</p>
 <p>If a reconstruction stops on an error, it starts again by itself after the next app update, which is how a fix reaches your site; there is nothing to press.</p>
-<p>A project's own administrators do not need a Jira administrator for their project: <strong>Project settings &rarr; Apps &rarr; Sprint Ledger</strong> lists the project's boards and how far each board's history has been read, turns tracking on or off for that project, and reads the history of any board that has not been read yet. On a site that tracks every project, only a Jira administrator can take a project out.</p>
+<p>A project's own administrators do not need a Jira administrator for their project: <strong>Project settings &rarr; Apps &rarr; Sprint Ledger</strong> lists the project's boards and how far each board's history has been read, turns tracking on or off for that project, reads the history of any board that has not been read yet, and exports a board's sprints as CSV: one row per sprint with the gadget's numbers, or one sprint with one row per issue (its scope, when it was added or removed and by which account, its estimates, its status at the close and whether it was completed or carried over). The file is built in the browser with summaries read from Jira as the person exporting, so issues they cannot see are left out; it opens in Excel and Google Sheets with dates in UTC. On a site that tracks every project, only a Jira administrator can take a project out. The app does not follow a project while it is turned off, so turning it back on marks its boards as not read yet, and reading them again brings its values up to date.</p>
 
 <h3>How long it takes</h3>
 <p>A full reconstruction costs about two Jira API points per issue that has ever been in a sprint, and the app spends at most 12,000 points an hour so that it never crowds out your other apps or your own integrations. That works out at roughly 6,000 issues an hour.</p>
@@ -128,15 +129,15 @@ issue in carriedOverFrom("Dev: 25_1*") AND issue not in completedIn("Dev: 25_1*"
 <figcaption style="font-size:0.9rem;color:#6b778c">What it looks like on the demo site: a function in the JQL bar and its results, the Ledger columns, then a query over the fields alone.</figcaption>
 </figure>
 
-<h2 id="beta">6. What is not there yet</h2>
-<p>You are early, so here is the honest list. Everything below is built during the beta and arrives by app update, with no action from you:</p>
-<ul>
-<li><strong>The dashboard gadget</strong> (committed, added, removed, completed, carried, say/do and scope change per sprint, with a chart).</li>
-<li><strong>CSV export</strong> per sprint and per board, including who added or removed each issue and when.</li>
-</ul>
-<p>What is already there and safe to lean on: the reconstruction, the live capture, the hourly reconciliation, the eight fields and the six functions; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page.</p>
+<h2 id="gadget">6. The dashboard gadget</h2>
+<p>Add <strong>Sprint scope and say/do (Ledger)</strong> to any dashboard and choose a board, how many closed sprints to show (up to 24), whether to count issues or the board's estimate, and whether to include the active sprint. For each sprint it shows what was committed at the start, what was added after it, what was removed, what was completed and what carried over, with two ratios: say/do, which is completed divided by committed, and scope change, which is added plus removed, divided by committed. Below the table a stacked bar shows what became of each sprint's issues: completed, carried over or removed.</p>
+<p>The gadget offers only the boards Sprint Ledger tracks that you can see, and shows a board's numbers only to people who can see that board. It reloads every 30 minutes, so it also works on a wallboard, and its numbers are the ones the Sprint Report comparison below checks. It reads best in a wide dashboard column; in a narrow one the table's headings wrap.</p>
 
-<h2 id="accuracy">7. Checking the numbers against the Sprint Report</h2>
+<h2 id="beta">7. What is not there yet</h2>
+<p>Everything the beta set out to deliver is now built: the reconstruction, the live capture, the hourly reconciliation, the eight fields and the six functions; the dashboard gadget; the CSV export; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page. Updates arrive by themselves, with no action from you.</p>
+<p>One thing may still change, and we will tell you before it does: the names of the eight fields, which we are settling with the beta sites. A rename would break saved filters and automation rules that use the old names.</p>
+
+<h2 id="accuracy">8. Checking the numbers against the Sprint Report</h2>
 <p>This is the one thing we would like every beta site to do, and it takes about fifteen minutes. Pick three closed sprints, ideally ones you remember, and compare.</p>
 <ol>
 <li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose the sprint.</li>
@@ -151,20 +152,20 @@ issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
-<tr><td>Subtasks are missing from both</td><td>Jira's report excludes them and so do we, by default. The ledger still tracks them, and a setting to count them is coming.</td></tr>
+<tr><td>Subtasks are missing from both</td><td>Jira's report excludes them and so do we, by default. The ledger still tracks them, and the admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue that was added after the start and then removed again appears in <em>both</em> <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while Jira's report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and reporting on scope change needs both. Jira shows each issue once, in one list.</td></tr>
-<tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. A setting to define done by status category instead is coming.</td></tr>
+<tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. The admin page can define done by status category instead.</td></tr>
 </tbody>
 </table>
 <p>An issue that was committed, removed and then put back counts as committed, exactly as Jira's report treats it. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
 
-<h2 id="privacy">8. Privacy, data and uninstalling</h2>
+<h2 id="privacy">9. Privacy, data and uninstalling</h2>
 <p>The full <a href="privacy.html">privacy policy</a> is on this site; in short:</p>
 <p>Sprint Ledger stores issue IDs and keys, project IDs, sprint and board metadata, timestamps, the account ID of whoever added or removed an issue, and the values it computes. It does <strong>not</strong> store summaries, descriptions, comments or attachments. Nothing is sent anywhere: there are no external services and no egress, because the app runs on Atlassian's own infrastructure and its data lives in Forge storage attached to your installation, which also means it inherits your site's data residency.</p>
 <p>Account IDs are captured so that an export can say who changed the scope. On the admin page, <em>Store account ids</em> turns that off and <em>Anonymise user ids</em> removes the ones already stored. <em>Delete all ledger data</em> empties the ledger without uninstalling, and uninstalling the app removes the installation and the storage that belongs to it.</p>
 <p>The beta is free. When the app is listed, beta sites keep it free for 60 days from the listing date, and sites with up to 10 users stay free after that.</p>
 
-<h2 id="support">9. Support</h2>
+<h2 id="support">10. Support</h2>
 <p>Reply to the invitation email, or write to <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>. During the beta you get an answer the same day, from the person who writes the app. Backfill stuck, a number that looks wrong, a field name that reads badly, a query you expected to work: all of it is useful, and the naming in particular is still open.</p>
 
 <footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. <a href="./">Home</a> &middot; <a href="articles/four-ways-to-find-issues-added-after-sprint-start.html">Articles</a> &middot; <a href="privacy.html">Privacy policy</a></footer>
