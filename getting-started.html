@@ -99,7 +99,7 @@
 <tr><td>Sprint carried (Ledger)</td><td>number</td><td>How many closed sprints the issue left unfinished</td></tr>
 <tr><td>Sprint original (Ledger)</td><td>text</td><td>Name of the first sprint the issue was ever in</td></tr>
 <tr><td>Sprint membership (Ledger)</td><td>text list</td><td>The name of every sprint the issue has been in since that sprint started, whether it was completed, removed or carried over, oldest first. Future sprints are in Jira's own Sprint field</td></tr>
-<tr><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID. This is what the JQL functions search; the newest 100 sprints are kept per issue</td></tr>
+<tr><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, <code>o:</code> completed outside the sprint (already done when it started), each followed by the sprint ID. This is what the JQL functions search; the newest 100 sprints are kept per issue</td></tr>
 </tbody>
 </table>
 <p>They sort, they filter and they export like any other field:</p>
@@ -165,17 +165,16 @@ issue in addedAfterSprintStart("ACME Sprint 41")
 issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
-<p>Four differences are expected and are not bugs:</p>
+<p>Three differences are expected and are not bugs:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td>Subtasks are missing from both</td><td>Jira's report excludes them and so do we, by default. The ledger still tracks them, and the admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue that was added after the start and then removed again appears in <em>both</em> <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while Jira's report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and reporting on scope change needs both. Jira shows each issue once, in one list.</td></tr>
 <tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. The admin page can define done by status category instead.</td></tr>
-<tr><td>An issue that was already done when the sprint started is in <code>completedIn</code>, while Jira's report lists it under "Issues completed outside of this sprint"</td><td>Jira counts an issue as completed in a sprint only if it became done after the sprint started; Sprint Ledger counts every issue that was in the sprint and done at the close. It happens most often with an issue carried over and finished between two sprints.</td></tr>
 </tbody>
 </table>
-<p>An issue that was committed, removed and then put back counts as committed, exactly as Jira's report treats it. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
+<p>An issue that was committed, removed and then put back counts as committed, and one that was already done when the sprint started and still done at the close is completed outside the sprint (the <code>o:</code> tag, in neither <code>completedIn</code> nor <code>carriedOverFrom</code>), exactly as Jira's report treats them. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
 
 <h2 id="privacy">9. Privacy, data and uninstalling</h2>
 <p>The full <a href="privacy.html">privacy policy</a> is on this site; in short:</p>

@@ -49,12 +49,14 @@
 <tr id="added"><td><strong>Added after start</strong></td><td>it was not committed, and joined the sprint after the start and before the close</td><td>marked with an asterisk</td></tr>
 <tr id="removed"><td><strong>Removed</strong></td><td>it was committed or added after start, and was no longer in the sprint at the close</td><td>Issues Removed From Sprint</td></tr>
 <tr id="added-then-removed"><td><strong>Added then removed</strong></td><td>it was added after start and removed</td><td>only under Issues Removed From Sprint</td></tr>
-<tr id="completed"><td><strong>Completed</strong></td><td>it was in the sprint at the close, with a status that counts as done</td><td>Completed Issues</td></tr>
+<tr id="completed"><td><strong>Completed</strong></td><td>it was in the sprint at the close, with a status that counts as done, and was not already done at the start and ever since</td><td>Completed Issues</td></tr>
 <tr id="carried"><td><strong>Carried over</strong></td><td>it was in the sprint at the close, and not done</td><td>Issues Not Completed</td></tr>
+<tr id="completed-outside"><td><strong>Completed outside</strong></td><td>it was in the sprint at the close, and had been done without a break since before the start, however it joined</td><td>Issues completed outside of this sprint</td></tr>
 </tbody>
 </table>
+<p id="done-before-start"><strong>Completed outside</strong> is Jira's own rule. An issue that was already done when the sprint started, and still done when it closed, did no work in that sprint, so Jira's report lists it apart and counts it neither as completed nor as not completed. Sprint Ledger does the same: such an issue is in neither <code>completedIn()</code> nor <code>carriedOverFrom()</code>, it does not count in say/do, and its tag is <code>o:</code>, so <code>"Sprint tags (Ledger)" = "o:5231"</code> finds the ones of sprint 5231. The commonest case is an issue carried over and finished between two sprints. An issue that was reopened during the sprint and done again, or that became done after the start while it was out of the sprint, is completed, as in the report.</p>
 <p><strong>Done</strong> means, by default, a status in the rightmost column of the sprint's board, as the Sprint Report counts it. An administrator can switch to "any status in the Done category" on the <a href="admin.html#settings">admin page</a>; the whole history is then classified again, without reading Jira.</p>
-<p><strong>Completed and carried over</strong> are final only for closed sprints. For the active sprint they describe the state now and change until it closes, which is why <code>completedIn()</code> and <code>carriedOverFrom()</code> answer for closed sprints only.</p>
+<p><strong>Completed, carried over and completed outside</strong> are final only for closed sprints. For the active sprint they describe the state now and change until it closes, which is why <code>completedIn()</code> and <code>carriedOverFrom()</code> answer for closed sprints only.</p>
 <p><strong>Estimates.</strong> A committed issue's estimate is the one it had at the start, an added issue's the one it had when it joined, as the Sprint Report does; the completed estimate is the one at the close, or at the moment of removal for a removed issue. When the estimate was never changed, its current value is used.</p>
 
 <h2 id="edge-cases">The awkward cases</h2>
@@ -77,14 +79,13 @@
 </table>
 
 <h2 id="sprint-report">How the numbers compare with the Sprint Report</h2>
-<p>Four differences are expected, and none is a bug:</p>
+<p>Three differences are expected, and none is a bug:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td>Subtasks missing from both</td><td>Jira's report leaves them out and so does Sprint Ledger by default. The admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue added after the start and then removed appears in both <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while the report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and a scope-change report needs both. The report shows each issue once, in one list.</td></tr>
 <tr><td>An old sprint's completed count differs</td><td>"Completed" follows the board's columns as they are now. If the columns were rearranged after the sprint closed, the count can move. Defining done by status category on the admin page makes the answer independent of the columns.</td></tr>
-<tr id="done-before-start"><td>An issue that was already done when the sprint started counts in <code>completedIn</code>, while the report lists it under "Issues completed outside of this sprint"</td><td>Jira's report counts an issue as completed in a sprint only if it became done after the sprint started; an issue that was done at the start and stayed done until the close is "completed outside", however it joined the sprint. Sprint Ledger counts every issue that was in the sprint and done at the close as completed. This happens most often with an issue carried over and finished between two sprints.</td></tr>
 </tbody>
 </table>
 <p>On the app's test site, fifty closed sprints were compared list by list with Jira's Sprint Report, ten of them built to exercise the cases above and forty sampled from five years of a larger project: forty-nine agreed exactly, and the fiftieth differed only by the second case in the table.</p>
@@ -93,7 +94,7 @@
 <p>The quickest check is on the admin page: <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> reads Jira's own report for the last three closed sprints of a board and compares it with the ledger issue by issue, including each issue's estimate at the start and at the close, and names every difference with its reason. To check a sprint by hand:</p>
 <ol>
 <li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose a closed sprint.</li>
-<li>Run these with the sprint's name, and compare each list with the report's "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint" and the asterisked issues:</li>
+<li>Run these with the sprint's name, and compare each list with the report's "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint" and the asterisked issues; "Issues completed outside of this sprint" is <code>"Sprint tags (Ledger)" = "o:"</code> followed by the sprint's ID:</li>
 </ol>
 <pre><code>issue in committedTo("ACME Sprint 41")
 issue in addedAfterSprintStart("ACME Sprint 41")
@@ -101,7 +102,7 @@ issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <p>For an issue that appears in one list and not the other, open it and add the <a href="fields.html#sprint-history">Sprint history (Ledger)</a> panel: it shows when the issue entered and left the sprint and the status it had at the close, which is usually the whole explanation.</p>
-<p>Anything that differs other than the four cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
+<p>Anything that differs other than the three cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
 
 <!-- site:footer -->
 <footer class="site">

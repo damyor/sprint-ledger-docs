@@ -75,7 +75,7 @@
 <h3 id="accuracy">Compare with Jira's Sprint Report</h3>
 <p>Choose a tracked board and press <em>Compare the last three closed sprints</em>. For each sprint, the app reads Jira's own Sprint Report and compares it with the ledger issue by issue: completed, not completed, removed from the sprint, added after the start, and each issue's estimate at the start and at the close. Each sprint shows whether it agrees, a table of any issue the two sides list differently, the differences that have a documented reason, and whether the estimates agree; the line underneath adds up the sprints. Nothing is changed by the check.</p>
 <ul>
-<li>A difference with a documented reason is one of the four listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>, confirmed from the issue's own history. Any other difference is a bug: send the sprint and the issue keys shown to <a href="support.html">support</a>.</li>
+<li>A difference with a documented reason is one of the three listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>, confirmed from the issue's own history. Any other difference is a bug: send the sprint and the issue keys shown to <a href="support.html">support</a>.</li>
 <li>Subtasks are left out of the comparison, because Jira's report never lists them. If your board estimates by a field other than the one the ledger reads, the estimates are not compared.</li>
 <li>Each sprint costs about one API point per issue, from the same hourly budget as everything else. The report is read from the endpoint Jira's own Sprint Report page uses, which Atlassian does not document; if Jira ever answers differently, the sprint shows "could not be read" rather than a difference.</li>
 </ul>
@@ -138,7 +138,7 @@
 <dt id="function-names">"Another app owns some JQL function names"</dt>
 <dd>A function name can belong to only one app on a Jira site, and Jira lists the names shown as another installed app's. Those names do not reach Sprint Ledger; its fields, its other functions and the gadget are unaffected. Tell <a href="support.html">support</a> which app it is.</dd>
 <dt id="numbers">A number differs from the Sprint Report</dt>
-<dd>Four differences are expected; they are listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>. <a href="#accuracy">Compare with Jira's Sprint Report</a> tells you which issues differ and why. Anything else is a bug worth reporting.</dd>
+<dd>Three differences are expected; they are listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>. <a href="#accuracy">Compare with Jira's Sprint Report</a> tells you which issues differ and why. Anything else is a bug worth reporting.</dd>
 </dl>
 
 <h2 id="uninstall">10. Uninstalling</h2>

@@ -31,6 +31,13 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.10.0">2.10.0 &middot; 17 September 2026</h2>
+<ul>
+<li>An issue that was already done when a sprint started, and still done when it closed, now counts as <a href="classification.html#completed-outside">completed outside</a> the sprint, as in Jira's Sprint Report: in neither <code>completedIn()</code> nor <code>carriedOverFrom()</code>, not in say/do, and tagged <code>o:</code> in <a href="fields.html#sprint-tags">Sprint tags (Ledger)</a>. The gadget's footer mentions such issues, and both files of the <a href="export.html">CSV export</a> show them in their last columns. The fourth expected difference that 2.9.0 listed is gone, so three remain.</li>
+<li>Every site's sprints and Ledger fields are counted again once, automatically, within an hour of the update.</li>
+<li>Fixed: an issue whose status changed and which was then moved into a sprint could be counted as carried over at the close instead of completed.</li>
+</ul>
+
 <h2 id="v2.9.0">2.9.0 &middot; 17 September 2026</h2>
 <ul>
 <li>New: <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> on the admin page. Choose a board, and the app reads Jira's own report for its last three closed sprints and compares it with the ledger issue by issue, estimates included, naming every difference and its reason. The check changes nothing.</li>

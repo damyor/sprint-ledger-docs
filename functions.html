@@ -58,7 +58,7 @@
 <tr><td><a href="#addedAfterSprintStart"><code>addedAfterSprintStart(sprint?, board?)</code></a></td><td>Issues that joined the sprint after it started</td></tr>
 <tr><td><a href="#removedFromSprint"><code>removedFromSprint(sprint?, board?)</code></a></td><td>Issues taken out after it started and before it closed</td></tr>
 <tr><td><a href="#committedTo"><code>committedTo(sprint?, board?)</code></a></td><td>Issues that were in the sprint the moment it started</td></tr>
-<tr><td><a href="#completedIn"><code>completedIn(sprint?, board?)</code></a></td><td>Issues in the sprint at completion whose status counted as done</td></tr>
+<tr><td><a href="#completedIn"><code>completedIn(sprint?, board?)</code></a></td><td>Issues in the sprint at completion whose status counted as done, and that were not already done when it started</td></tr>
 <tr><td><a href="#carriedOverFrom"><code>carriedOverFrom(sprint?, board?)</code></a></td><td>Issues in the sprint at completion that were not done</td></tr>
 <tr><td><a href="#carriedOver"><code>carriedOver(n)</code></a></td><td>Issues that have rolled out of at least <em>n</em> closed sprints</td></tr>
 <tr><td><a href="#sprintsNamed"><code>sprintsNamed(sprint, board?)</code></a></td><td>Issues in the named sprints now</td></tr>
@@ -98,7 +98,7 @@ sprint in openSprints() AND issue in addedAfterSprintStart()</code></pre>
 <pre><code>issue in committedTo("ACME Sprint 41") AND issue not in completedIn("ACME Sprint 41")</code></pre>
 
 <h3 id="completedIn"><code>completedIn(sprint?, board?)</code></h3>
-<p>Issues that were in the sprint when it was completed and whose status then counted as done: by default a status in the board's rightmost column, as the Sprint Report counts it, or any status in the Done category if an administrator has chosen that on the <a href="admin.html#settings">admin page</a>. It answers for closed sprints only: while a sprint runs, which issues it will complete is not decided yet.</p>
+<p>Issues that were in the sprint when it was completed and whose status then counted as done: by default a status in the board's rightmost column, as the Sprint Report counts it, or any status in the Done category if an administrator has chosen that on the <a href="admin.html#settings">admin page</a>. An issue that was already done when the sprint started and still done at the close is left out, because Jira's report lists it as <a href="classification.html#completed-outside">completed outside</a> the sprint. It answers for closed sprints only: while a sprint runs, which issues it will complete is not decided yet.</p>
 
 <h3 id="carriedOverFrom"><code>carriedOverFrom(sprint?, board?)</code></h3>
 <p>Issues that were in the sprint when it was completed and were not done: the report's "Issues Not Completed". Closed sprints only, like <code>completedIn</code>.</p>

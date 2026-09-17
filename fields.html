@@ -55,7 +55,7 @@
 <tr id="sprint-carried"><td>Sprint carried (Ledger)</td><td>number</td><td>How many closed sprints the issue was in at completion without being done, across its whole history</td></tr>
 <tr id="sprint-original"><td>Sprint original (Ledger)</td><td>text</td><td>The name of the first sprint the issue counted in</td></tr>
 <tr id="sprint-membership"><td>Sprint membership (Ledger)</td><td>text list</td><td>The name of every started sprint the issue has counted in, oldest first, each once, whether it was completed, removed or carried over. Future sprints are in Jira's own Sprint field</td></tr>
-<tr id="sprint-tags"><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint and outcome, which the JQL functions search: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, each followed by the sprint ID, for example <code>c:5231</code>. The newest 100 tokens are kept</td></tr>
+<tr id="sprint-tags"><td>Sprint tags (Ledger)</td><td>text list</td><td>One token per sprint and outcome, which the JQL functions search: <code>c:</code> committed, <code>a:</code> added after start, <code>r:</code> removed, <code>d:</code> completed, <code>x:</code> carried over, <code>o:</code> <a href="classification.html#completed-outside">completed outside</a> the sprint, each followed by the sprint ID, for example <code>c:5231</code>. The newest 100 tokens are kept</td></tr>
 </tbody>
 </table>
 <p>"Counts in" means what <a href="classification.html">How Sprint Ledger counts</a> defines: the issue was in the sprint at its start or joined it before it closed, the sprint was not deleted, and the issue is not a subtask, unless an administrator has turned on counting subtasks.</p>

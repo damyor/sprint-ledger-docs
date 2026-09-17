@@ -59,6 +59,7 @@
 <tr><td>Committed, Added after start, Removed, Completed, Carried over</td><td>Issue counts, as defined on <a href="classification.html">How Sprint Ledger counts</a></td></tr>
 <tr><td>Say/do, Scope change</td><td>Ratios, for example 0.875: completed divided by committed, and added plus removed divided by committed. Format the column as a percentage to read them as the gadget shows them. Empty when nothing was committed</td></tr>
 <tr><td>Committed estimate, Added estimate, Removed estimate, Completed estimate, Carried over estimate</td><td>The same five in the board's estimate. For a board estimated in time the headings end in "(hours)"</td></tr>
+<tr><td>Completed outside, Completed outside estimate</td><td>Issues that were already done when the sprint started and still done at the close, which count neither as completed nor as carried over (<a href="classification.html#completed-outside">completed outside</a>), and their estimate. The last two columns, so that a spreadsheet built on the earlier ones keeps working</td></tr>
 </tbody>
 </table>
 
@@ -73,7 +74,7 @@
 <tr><td>Removed at (UTC), Removed by (account id)</td><td>When it was taken out and by whom; empty unless it was removed</td></tr>
 <tr><td>Estimate at start, Estimate at close</td><td>The estimate when it entered the sprint (at the start for a committed issue) and at the close, or when it was removed. "(hours)" for time estimates</td></tr>
 <tr><td>Status at close</td><td>The issue's status when the sprint closed</td></tr>
-<tr><td>Completed, Carried over</td><td>TRUE or FALSE; for the active sprint they are provisional until it closes</td></tr>
+<tr><td>Completed, Carried over, Completed outside</td><td>TRUE or FALSE, at most one of them TRUE; for the active sprint they are provisional until it closes. Completed outside is the last column</td></tr>
 </tbody>
 </table>
 <p><strong>Who added or removed an issue</strong> is the person's Atlassian account ID rather than their name, because showing names would need an extra permission every installed site would have to approve. An administrator can turn off storing account IDs on the <a href="admin.html#settings">admin page</a>; the two columns are then empty for changes made afterwards.</p>
