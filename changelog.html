@@ -31,6 +31,13 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.11.0">2.11.0 &middot; 17 September 2026</h2>
+<ul>
+<li>Fixed: with <a href="admin.html#setting-actors">Who moved each issue</a> turned off, the app still kept the account ID of whoever moved an issue in the issue's stored sprint history, and a move made after the setting was turned off could store it again. Nothing is stored now while the setting is off; IDs stored earlier stay until <em>Anonymise user ids</em>.</li>
+<li>Sprint goals are no longer stored. The app never used them, and the goals it had stored are deleted with this update.</li>
+<li>The error reports the app's pages send when something goes wrong now come only from signed-in users, and are kept short.</li>
+</ul>
+
 <h2 id="v2.10.0">2.10.0 &middot; 17 September 2026</h2>
 <ul>
 <li>An issue that was already done when a sprint started, and still done when it closed, now counts as <a href="classification.html#completed-outside">completed outside</a> the sprint, as in Jira's Sprint Report: in neither <code>completedIn()</code> nor <code>carriedOverFrom()</code>, not in say/do, and tagged <code>o:</code> in <a href="fields.html#sprint-tags">Sprint tags (Ledger)</a>. The gadget's footer mentions such issues, and both files of the <a href="export.html">CSV export</a> show them in their last columns. The fourth expected difference that 2.9.0 listed is gone, so three remain.</li>
