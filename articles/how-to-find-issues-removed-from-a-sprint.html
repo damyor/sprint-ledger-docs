@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to find issues removed from a sprint in Jira Cloud (2026) | Sprint Ledger</title>
+<meta name="description" content="JQL cannot search the Sprint field's history. The Sprint Report, an issue's history, the report's endpoint, an automation log and an app compared: how to list the issues taken out of a sprint, and when each way is enough.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/articles/how-to-find-issues-removed-from-a-sprint.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to find issues removed from a sprint in Jira Cloud (2026)">
+<meta property="og:description" content="JQL cannot search the Sprint field's history. Five ways to list the issues taken out of a sprint, and when each is enough.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/articles/how-to-find-issues-removed-from-a-sprint.html">
+<meta property="og:site_name" content="Sprint Ledger">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.35rem; margin-top: 2rem; }
+  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
+  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; }
+  a { color: #0052cc; }
+  nav { font-size: 0.9rem; color: #6b778c; }
+  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<nav><a href="../">Sprint Ledger</a> / Articles</nav>
+<h1>How to find issues removed from a sprint in Jira Cloud (2026)</h1>
+<p class="byline">Damian Plamenov Yordanov, 17 September 2026</p>
+<p>A story leaves the sprint in its second week, and in the review someone asks what was taken out, and when. Jira has the answer in every issue's history, but not as a query. The JQL people try first fails: <code>sprint was "Sprint 41"</code> answers <em>History searches do not support the 'sprint' field</em>, and <code>sprint != "Sprint 41"</code> returns every issue that is not in the sprint now, which is nearly every issue on the site. <a href="https://jira.atlassian.com/browse/JRACLOUD-75868">JRACLOUD-75868</a>, the request to search for issues added to and removed from a sprint, has been open since January 2018 with more than 1,400 votes. Here are the ways teams answer the question today, what each one can and cannot do, and when each is enough. Disclosure up front: I am building the last one.</p>
+
+<h2>1. Read the Sprint Report</h2>
+<p>Open the board, then Reports, Sprint Report, and pick the sprint. The last section, <em>Issues Removed From Sprint</em>, lists the issues that were in the sprint after it started and were no longer in it when it was completed. It is exact, it covers every closed sprint, and it costs nothing.</p>
+<p>Three details matter when you compare it with anything else. An issue that was added after the start and removed again appears only in this section, not among the additions marked with an asterisk. Subtasks are left out. And the issues you move to the backlog when you complete a sprint are <em>not completed</em>, not removed: completing a sprint leaves the closed sprint in their Sprint field, so they were never taken out of it.</p>
+<p>What it cannot do is what a page cannot do: no filter, no column, no dashboard gadget, no automation, no export beyond copy and paste, and one sprint at a time. For a retrospective on one sprint it is the right tool. For "how much did we pull out of each sprint this quarter" it means opening a report per sprint and counting.</p>
+
+<h2>2. Look at the issue's history</h2>
+<p>For one disputed story, the issue's History tab shows every change to the Sprint field with the value before and after, the time and the person who made it. That is the most precise answer Jira gives, and it is the only one of the free ways that says who removed the issue. It is also one issue at a time, so nobody rebuilds a sprint this way.</p>
+
+<h2>3. Ask the endpoint behind the Sprint Report</h2>
+<p>If the numbers have to end up in a spreadsheet or a BI tool, the Sprint Report page reads <code>GET /rest/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=&lt;board id&gt;&amp;sprintId=&lt;sprint id&gt;</code>, and its <code>contents.puntedIssues</code> is the removed list. A small script that walks a board's closed sprints (<code>GET /rest/agile/1.0/board/&lt;board id&gt;/sprint?state=closed</code>) can fill a table overnight, and the numbers agree with the report because they are the report's.</p>
+<p>The limits: the endpoint is internal and undocumented, so it can change without notice; it takes one call per sprint; and it gives the list without the time or the person, which live in each issue's changelog (<code>POST /rest/api/3/changelog/bulkfetch</code> with the Sprint field, up to 1,000 issues per call). Someone has to own the script and the schedule.</p>
+
+<h2>4. Log sprint changes with an automation rule</h2>
+<p>From the day it exists, a rule can keep the record the report computes after the fact:</p>
+<ul>
+<li>Create a paragraph field, say "Sprint log", and a date-time field, say "Last sprint change".</li>
+<li>Trigger: <strong>Field value changed</strong>, field Sprint.</li>
+<li>Action: <strong>Edit work item fields</strong>. Set "Last sprint change" to <code>{{now}}</code>, and set "Sprint log" to its existing text followed by a new line such as <code>{{now.jiraDate}} {{initiator.displayName}}: {{fieldChange.fromString}} to {{fieldChange.toString}}</code>.</li>
+</ul>
+<p>It works, and it records who made the change, which the report does not. The limits are real, though. Automation cannot tell whether the sprint an issue left was active, so a move between two future sprints is logged exactly like a removal from the running sprint, and someone has to read the log to tell them apart. A log is text, so "removed from Sprint 41" becomes a text search rather than a filter you can trust. Nothing before the rule's first run is recorded. And every run counts against the site's monthly automation allowance (100 runs a month on Free, 1,700 site-wide on Standard, 1,000 per user on Premium at the time of writing).</p>
+
+<h2>5. Look for a JQL app</h2>
+<p>The two big JQL toolkits cover the other half of the question on Jira Cloud. Appfire's JQL Search Extensions has <code>addedToSprintAfterStart(board, sprint)</code>, and ScriptRunner has <code>addedAfterSprintStart(board, sprint)</code> on its Enhanced Search screen. Neither documents a function for removals on Cloud: ScriptRunner's <code>removedAfterSprintStart</code> belongs to its self-hosted edition, and its Cloud documentation lists it among the functions that are not available. If you already own either app, check its current function list before you look further.</p>
+
+<h2>6. Sprint Ledger (the one I am building)</h2>
+<p>Sprint Ledger is a Forge app that reconstructs the membership history of every sprint on the site from the changelog, keeps it current from Jira's events, and answers the removal question the ways the free methods cannot:</p>
+<ul>
+<li><strong>As JQL</strong>: <code>issue in removedFromSprint("Sprint 41")</code> returns the issues taken out after the start and before the completion. Without an argument it means the active sprints, and a name with <code>*</code> covers a series: <code>issue in removedFromSprint("Team A Sprint *")</code>.</li>
+<li><strong>Combined with the other functions</strong>: <code>issue in removedFromSprint("Sprint 41") AND issue not in committedTo("Sprint 42")</code> is what was dropped and not picked back up in the next sprint.</li>
+<li><strong>As columns</strong>: "Sprint scope (Ledger)" says Removed or Added then removed, and "Removed from sprint (Ledger)" holds the date, so <code>"Removed from sprint (Ledger)" &gt;= -14d</code> is an ordinary filter and a sortable column.</li>
+</ul>
+<p>It is retroactive for every sprint the site has run and follows the Sprint Report's definitions, with the differences documented. One of them is deliberate: an issue added after the start and removed again counts as both added and removed, because reporting on scope change needs both. It runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
+
+<h2>Which one is enough?</h2>
+<table>
+<thead><tr><th></th><th>Sprint Report</th><th>Issue history</th><th>Report endpoint</th><th>Automation log</th><th>Sprint Ledger</th></tr></thead>
+<tbody>
+<tr><td>Removed issues of a closed sprint</td><td>yes, on a page</td><td>one issue at a time</td><td>yes, by script</td><td>from the rule's first run</td><td>yes</td></tr>
+<tr><td>Every past sprint at once</td><td>no</td><td>no</td><td>a script over all sprints</td><td>no</td><td>yes</td></tr>
+<tr><td>A JQL filter, board or dashboard</td><td>no</td><td>no</td><td>no</td><td>text search on the log</td><td>yes</td></tr>
+<tr><td>When it was removed</td><td>no</td><td>yes</td><td>from the changelog</td><td>yes</td><td>yes</td></tr>
+<tr><td>Who removed it</td><td>no</td><td>yes</td><td>from the changelog</td><td>yes</td><td>stored; the export that shows it is in progress</td></tr>
+<tr><td>Setup</td><td>none</td><td>none</td><td>a script and a schedule</td><td>an afternoon</td><td>install and wait for the reconstruction</td></tr>
+<tr><td>Cost for 100 users</td><td>free</td><td>free</td><td>free</td><td>free (rule runs)</td><td>about $50 a month</td></tr>
+</tbody></table>
+<p>If you look at one sprint in a retrospective, the Sprint Report is enough. If a single story is in dispute, its history is enough. If the numbers must reach a BI tool and someone can own a script, the endpoint is enough. If you only care from today on and can live with reading a log, the automation rule is enough. If you want removals as a query and a column for every sprint the site has run, that is the gap Sprint Ledger is meant to fill, and I am looking for beta sites that will tell me where it is wrong: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
+<p>The other half of the question, what was added after the start, has its own comparison: <a href="four-ways-to-find-issues-added-after-sprint-start.html">Four ways to find issues added after sprint start in Jira Cloud</a>. Sprint dates as a filter and a column are covered in <a href="sprint-start-and-end-dates-in-jql.html">Sprint start and end dates in JQL and as columns</a>.</p>
+<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. Corrections: <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>.</footer>
+</body>
+</html>

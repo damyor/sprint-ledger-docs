@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprint start and end dates in JQL and as columns (Jira Cloud, 2026) | Sprint Ledger</title>
+<meta name="description" content="JQL has no sprint start or end date and the Sprint column shows names only. Jira's sprint functions, automation into date fields, a sprint-fields app and Sprint Ledger compared: how to filter and sort by sprint dates, and when each way is enough.">
+<link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/articles/sprint-start-and-end-dates-in-jql.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sprint start and end dates in JQL and as columns (Jira Cloud, 2026)">
+<meta property="og:description" content="JQL has no sprint dates and the Sprint column shows names only. Four ways to filter and sort by sprint start and end, and when each is enough.">
+<meta property="og:url" content="https://damyor.github.io/sprint-ledger-docs/articles/sprint-start-and-end-dates-in-jql.html">
+<meta property="og:site_name" content="Sprint Ledger">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #172b4d; line-height: 1.55; }
+  h1 { font-size: 2rem; line-height: 1.2; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.35rem; margin-top: 2rem; }
+  p.byline { color: #6b778c; font-size: 0.95rem; margin-top: 0; }
+  code { background: #f4f5f7; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.92em; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 1rem 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #dfe1e6; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f4f5f7; }
+  a { color: #0052cc; }
+  nav { font-size: 0.9rem; color: #6b778c; }
+  footer { margin-top: 3rem; font-size: 0.9rem; color: #6b778c; border-top: 1px solid #dfe1e6; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<nav><a href="../">Sprint Ledger</a> / Articles</nav>
+<h1>Sprint start and end dates in JQL and as columns (Jira Cloud, 2026)</h1>
+<p class="byline">Damian Plamenov Yordanov, 17 September 2026</p>
+<p>Jira knows when every sprint starts and ends, and shows it on the board, in the backlog and in the reports, but not where people want it. JQL cannot compare a sprint's dates, and the Sprint column in a filter shows the sprint's name only. <a href="https://jira.atlassian.com/browse/JRACLOUD-72007">JRACLOUD-72007</a>, "Allow sprint start and end dates to be searched by JQL and displayed as columns in filters", has been open since May 2019 with more than 1,300 votes. The questions behind it are ordinary ones: every story in sprints that started this quarter, what is still open in the sprints that end this week, an export for a spreadsheet or Power BI with the dates next to each issue. Here are the ways to get there today, what each can and cannot do, and when each is enough. Disclosure up front: I am building the last one.</p>
+
+<h2>1. Use the sprint functions Jira has</h2>
+<p>Native JQL has three sprint functions and the sprint's name or ID: <code>sprint in openSprints()</code>, <code>sprint in closedSprints()</code>, <code>sprint in futureSprints()</code>, and <code>sprint in ("Sprint 41", "Sprint 42")</code>. They answer "now, past or future" and they combine well; <code>sprint in closedSprints() AND sprint in openSprints()</code>, for example, lists what has carried from a closed sprint into the current one.</p>
+<p>What they cannot do is compare a date. "Sprints that started this quarter" becomes a list of sprint names you maintain by hand, "ends this week" has no answer at all, and nothing puts a date in a column or an export. If your sprints follow a naming convention, the names are often enough; if they do not, this is where the free route ends.</p>
+
+<h2>2. Copy the dates into date fields with automation</h2>
+<p>A workaround that comes up again and again on the Community: two date fields and a rule that fills them.</p>
+<ul>
+<li>Create two date fields, say "Sprint start date" and "Sprint end date".</li>
+<li>Trigger: <strong>Field value changed</strong>, field Sprint.</li>
+<li>Action: <strong>Edit work item fields</strong>, setting them to <code>{{issue.sprint.last.startDate.jiraDate}}</code> and <code>{{issue.sprint.last.endDate.jiraDate}}</code>. Atlassian's own knowledge base uses <code>.last</code> so that an issue that has been in several sprints gets the latest one.</li>
+<li>Query: <code>"Sprint start date" &gt;= startOfMonth(-3)</code>, and the fields work as columns.</li>
+</ul>
+<p>It works for issues that move from the day the rule exists, and it costs nothing but setup. The limits: it is not retroactive (issues that do not move keep empty fields unless you run a backfill rule over them, and every issue is a rule run); a sprint whose dates are edited later leaves its issues with the old dates, because automation has triggers for a sprint being created, started or completed but none for a sprint being edited; the "end" is the planned end, so a sprint completed early or late needs a third field from <code>{{issue.sprint.last.completeDate}}</code> and another rule; and every run counts against the site's monthly automation allowance (100 runs a month on Free, 1,700 site-wide on Standard, 1,000 per user on Premium at the time of writing).</p>
+
+<h2>3. An app that writes sprint fields</h2>
+<p>Sprint Organizer (Apps Dynamic) is a Forge app with the Runs on Atlassian badge whose listing describes custom JQL fields for the sprint's name, state, goal, dates and board, closed sprints and sprint history. If what you want is the sprint's own attributes as fields, including the goal, it is aimed squarely at this question. Check its listing for the price and for how it treats sprints that closed before it was installed.</p>
+
+<h2>4. Sprint Ledger (the one I am building)</h2>
+<p>Sprint Ledger is a Forge app that reconstructs every sprint's history from the changelog and keeps it current from Jira's events. Among its eight read-only fields are two for dates:</p>
+<ul>
+<li><strong>"Sprint start (Ledger)"</strong>: the start date of the issue's latest sprint.</li>
+<li><strong>"Sprint end (Ledger)"</strong>: the planned end while that sprint runs and the completion date once it has closed, which is the semantics the first beta site asked for.</li>
+</ul>
+<p>Both work in JQL, sort, and show as columns and in anything that reads fields:</p>
+<ul>
+<li><code>"Sprint start (Ledger)" &gt;= startOfMonth(-3) ORDER BY "Sprint start (Ledger)" DESC</code>: every issue whose latest sprint started in the last three months.</li>
+<li><code>sprint in openSprints() AND "Sprint end (Ledger)" &lt;= endOfWeek() AND statusCategory != Done</code>: unfinished work in the sprints that end this week.</li>
+<li><code>"Sprint end (Ledger)" &lt; now() AND statusCategory != Done</code>: unfinished issues whose last sprint is already over.</li>
+</ul>
+<p>The values are filled for the site's whole sprint history when the app is installed, without a rule run per issue, and a date edited on a running or closed sprint reaches its issues' fields within seconds, from Jira's own sprint event. The fields describe the issue's <em>latest</em> sprint, so a story that rolled over shows the newer sprint's dates, and the rest of the history is in the other fields and the JQL functions (<code>committedTo</code>, <code>addedAfterSprintStart</code>, <code>removedFromSprint</code>, <code>completedIn</code>, <code>carriedOverFrom</code>, <code>carriedOver(n)</code>). It runs entirely inside Atlassian's infrastructure. It is in private beta now and will be on the Marketplace this autumn, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
+<figure style="margin:1.5rem 0">
+<img src="../media/sprint-ledger-jql.gif" alt="The Jira issue navigator running issue in addedAfterSprintStart(&quot;SLT Sprint 2&quot;) with nine results, then the Sprint scope, Added to sprint, Sprint start, Sprint end and Sprints carried columns, then a query over the Sprint start and Sprint scope fields returning 40 issues" width="960" height="765" style="max-width:100%;height:auto;border:1px solid #dfe1e6;border-radius:4px" loading="lazy">
+<figcaption style="font-size:0.9rem;color:#6b778c">Thirty seconds on the demo site: a function in the JQL bar, the Ledger columns including Sprint start and Sprint end, then a query over the Sprint start field.</figcaption>
+</figure>
+
+<h2>Which one is enough?</h2>
+<table>
+<thead><tr><th></th><th>Sprint functions</th><th>Automation into date fields</th><th>Sprint Organizer</th><th>Sprint Ledger</th></tr></thead>
+<tbody>
+<tr><td>Filter by a date range</td><td>no, by sprint name</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>Dates as columns and in exports</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>Issues from past sprints</td><td>yes, by name</td><td>only after a backfill run</td><td>see the listing</td><td>yes</td></tr>
+<tr><td>Follows a sprint whose dates are edited</td><td>does not apply</td><td>no</td><td>see the listing</td><td>yes</td></tr>
+<tr><td>Completion date of a closed sprint</td><td>no</td><td>a third field and rule</td><td>see the listing</td><td>yes, in "Sprint end"</td></tr>
+<tr><td>Scope change: added, removed, carried over</td><td>carry-over only</td><td>no</td><td>not listed</td><td>yes</td></tr>
+<tr><td>Cost for 100 users</td><td>free</td><td>free (rule runs)</td><td>see the listing</td><td>about $50 a month</td></tr>
+</tbody></table>
+<p>If your sprints are named well and you only filter by "current" or "past", the sprint functions are enough. If you need dates from now on and can maintain a rule, automation is enough. If the sprint's own attributes are what you want, look at Sprint Organizer. If you want the dates for the whole history, kept right when sprints change, next to what was committed, added, removed and carried, that is what Sprint Ledger is for, and I am looking for beta sites that will tell me where it is wrong: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
+<p>Related: <a href="four-ways-to-find-issues-added-after-sprint-start.html">Four ways to find issues added after sprint start in Jira Cloud</a> and <a href="how-to-find-issues-removed-from-a-sprint.html">How to find issues removed from a sprint in Jira Cloud</a>.</p>
+<footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. Corrections: <a href="mailto:damyor+sprintledger@gmail.com">damyor+sprintledger@gmail.com</a>.</footer>
+</body>
+</html>

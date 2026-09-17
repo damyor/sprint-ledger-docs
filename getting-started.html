@@ -52,6 +52,7 @@
 <p>The app reads the changelog of every issue that has ever been in a sprint and rebuilds, sprint by sprint, who was in it at the start, what arrived later, what left, what was finished and what rolled over.</p>
 <p>Watch it at <strong>Jira settings &rarr; Apps &rarr; Sprint Ledger</strong>. The page shows a progress banner with an estimate (it appears once the run is about 5% in, because the first stages are dominated by scheduling), and a table of every board it has discovered with its sprint count and state, plus a <em>Re-run</em> button per board and <em>Rebuild every tracked board</em>. A board whose project does not use sprints, such as a team-managed Kanban board, is listed as <em>no sprints</em> and skipped.</p>
 <p>If a reconstruction stops on an error, it starts again by itself after the next app update, which is how a fix reaches your site; there is nothing to press.</p>
+<p>A project's own administrators do not need a Jira administrator for their project: <strong>Project settings &rarr; Apps &rarr; Sprint Ledger</strong> lists the project's boards and how far each board's history has been read, turns tracking on or off for that project, and reads the history of any board that has not been read yet. On a site that tracks every project, only a Jira administrator can take a project out.</p>
 
 <h3>How long it takes</h3>
 <p>A full reconstruction costs about two Jira API points per issue that has ever been in a sprint, and the app spends at most 12,000 points an hour so that it never crowds out your other apps or your own integrations. That works out at roughly 6,000 issues an hour.</p>
@@ -111,14 +112,16 @@ project = ACME AND "Sprints carried (Ledger)" &gt;= 3 ORDER BY "Sprints carried 
 <tr><td><code>carriedOver(n)</code></td><td>Issues that have rolled out of at least <em>n</em> closed sprints</td></tr>
 </tbody>
 </table>
-<p>The sprint argument is a sprint name, a numeric sprint ID, or nothing at all, which means every active sprint on the site. A name matches every sprint with that name on any board, which is usually what you want across parallel boards; add the board name as a second argument to narrow it, or use the ID. A name that matches nothing gives you a message in the JQL editor rather than a silent empty result.</p>
+<p>The sprint argument is a sprint name, a numeric sprint ID, or nothing at all, which means every active sprint on the site. A name matches every sprint with that name on any board, which is usually what you want across parallel boards; add the board name as a second argument to narrow it, or use the ID. Names ignore upper and lower case, as Jira's own <code>sprint = "..."</code> does. A name that matches nothing gives you a message in the JQL editor rather than a silent empty result.</p>
+<p>A name may also contain <code>*</code>, which stands for any run of characters: <code>"Plan: 25_1*"</code> covers Plan: 25_10, Plan: 25_11 and Plan: 25_12. The <code>*</code> is the only wildcard; every other character, <code>_</code> and <code>?</code> included, means itself. A pattern covers the sprints of the projects Sprint Ledger is switched on for, a board name as the second argument narrows it to that board, and a pattern that matches more than 200 sprints asks you to narrow it rather than answering from part of the list. A saved filter with a pattern picks up a sprint created or renamed to match within seconds.</p>
 <pre><code>project = ACME AND issue in addedAfterSprintStart("ACME Sprint 42")
 sprint in openSprints() AND issue in addedAfterSprintStart()
 issue in committedTo("ACME Sprint 41") AND issue not in completedIn("ACME Sprint 41")
 issue in removedFromSprint("ACME Sprint 41") AND issue not in committedTo("ACME Sprint 42")
 issue in carriedOver(2) AND statusCategory != Done ORDER BY "Sprints carried (Ledger)" DESC
-issue in addedAfterSprintStart("Sprint 7", "ACME board")</code></pre>
-<p>The fourth one is the query people write to us about most: what was dropped from last sprint and never picked back up.</p>
+issue in addedAfterSprintStart("Sprint 7", "ACME board")
+issue in carriedOverFrom("Dev: 25_1*") AND issue not in completedIn("Dev: 25_1*")</code></pre>
+<p>The fourth one is the query people write to us about most: what was dropped from last sprint and never picked back up. The last one uses a pattern across a quarter's sprints: work that carried out of one of them and was not finished in any of them.</p>
 
 <figure style="margin:1.5rem 0">
 <img src="media/sprint-ledger-jql.gif" alt="The Jira issue navigator running issue in addedAfterSprintStart(&quot;SLT Sprint 2&quot;) with nine results, then the Sprint scope, Added to sprint, Sprint start, Sprint end and Sprints carried columns, then a query over the Sprint start and Sprint scope fields returning 40 issues" width="960" height="765" style="max-width:100%;height:auto;border:1px solid #dfe1e6;border-radius:4px" loading="lazy">
@@ -130,10 +133,8 @@ issue in addedAfterSprintStart("Sprint 7", "ACME board")</code></pre>
 <ul>
 <li><strong>The dashboard gadget</strong> (committed, added, removed, completed, carried, say/do and scope change per sprint, with a chart).</li>
 <li><strong>CSV export</strong> per sprint and per board, including who added or removed each issue and when.</li>
-<li><strong>The settings on the admin page</strong>: the definition of "done", whether subtasks count, and how far back the deep scan reaches. Until then the defaults are in force: done means the board's rightmost column, subtasks are tracked but left out of counts and tags, and the sweep for issues that were removed from every sprint covers the last 12 months.</li>
-<li><strong>The project settings page</strong>, for teams that should see their own project without a Jira admin.</li>
 </ul>
-<p>What is already there and safe to lean on: the reconstruction, the live capture, the hourly reconciliation, the eight fields and the six functions.</p>
+<p>What is already there and safe to lean on: the reconstruction, the live capture, the hourly reconciliation, the eight fields and the six functions; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page.</p>
 
 <h2 id="accuracy">7. Checking the numbers against the Sprint Report</h2>
 <p>This is the one thing we would like every beta site to do, and it takes about fifteen minutes. Pick three closed sprints, ideally ones you remember, and compare.</p>
@@ -160,7 +161,7 @@ issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <h2 id="privacy">8. Privacy, data and uninstalling</h2>
 <p>The full <a href="privacy.html">privacy policy</a> is on this site; in short:</p>
 <p>Sprint Ledger stores issue IDs and keys, project IDs, sprint and board metadata, timestamps, the account ID of whoever added or removed an issue, and the values it computes. It does <strong>not</strong> store summaries, descriptions, comments or attachments. Nothing is sent anywhere: there are no external services and no egress, because the app runs on Atlassian's own infrastructure and its data lives in Forge storage attached to your installation, which also means it inherits your site's data residency.</p>
-<p>Account IDs are captured so that an export can say who changed the scope; a setting to turn that off is part of the settings work above, and until it ships we will turn it off for you on request. Uninstalling the app removes the installation and the storage that belongs to it; an explicit "Delete all ledger data" button arrives on the admin page with the rest of the settings.</p>
+<p>Account IDs are captured so that an export can say who changed the scope. On the admin page, <em>Store account ids</em> turns that off and <em>Anonymise user ids</em> removes the ones already stored. <em>Delete all ledger data</em> empties the ledger without uninstalling, and uninstalling the app removes the installation and the storage that belongs to it.</p>
 <p>The beta is free. When the app is listed, beta sites keep it free for 60 days from the listing date, and sites with up to 10 users stay free after that.</p>
 
 <h2 id="support">9. Support</h2>
