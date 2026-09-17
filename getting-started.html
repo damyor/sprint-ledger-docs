@@ -154,7 +154,8 @@ issue in sprintsNamed("Dev: 26_*") AND statusCategory != Done</code></pre>
 <p>Everything the beta set out to deliver is now built: the reconstruction, the live capture, the hourly reconciliation, the ten fields and the nine functions; the dashboard gadget; the CSV export; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page. Updates arrive by themselves, with no action from you.</p>
 
 <h2 id="accuracy">8. Checking the numbers against the Sprint Report</h2>
-<p>The definitions behind every number are on <a href="classification.html">How Sprint Ledger counts</a>. This is the one thing we would like every beta site to do, and it takes about fifteen minutes. Pick three closed sprints, ideally ones you remember, and compare.</p>
+<p>The definitions behind every number are on <a href="classification.html">How Sprint Ledger counts</a>. This is the one thing we would like every beta site to do, and it now takes a minute: on the admin page, choose a board under <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> and press <em>Compare the last three closed sprints</em>. The app reads Jira's own report for each sprint and names every issue the two list differently, with the reason where there is a documented one. Tell us what it says, a screenshot is enough, and do it for your busiest boards if you can.</p>
+<p>To compare a sprint by hand instead, ideally one you remember:</p>
 <ol>
 <li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose the sprint.</li>
 <li>Run the four queries below with that sprint's name and compare each list with the report's: "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint", and the asterisked issues (the report's footnote marks those as added after start).</li>
@@ -164,13 +165,14 @@ issue in addedAfterSprintStart("ACME Sprint 41")
 issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
-<p>Three differences are expected and are not bugs:</p>
+<p>Four differences are expected and are not bugs:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td>Subtasks are missing from both</td><td>Jira's report excludes them and so do we, by default. The ledger still tracks them, and the admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue that was added after the start and then removed again appears in <em>both</em> <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while Jira's report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and reporting on scope change needs both. Jira shows each issue once, in one list.</td></tr>
 <tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. The admin page can define done by status category instead.</td></tr>
+<tr><td>An issue that was already done when the sprint started is in <code>completedIn</code>, while Jira's report lists it under "Issues completed outside of this sprint"</td><td>Jira counts an issue as completed in a sprint only if it became done after the sprint started; Sprint Ledger counts every issue that was in the sprint and done at the close. It happens most often with an issue carried over and finished between two sprints.</td></tr>
 </tbody>
 </table>
 <p>An issue that was committed, removed and then put back counts as committed, exactly as Jira's report treats it. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>

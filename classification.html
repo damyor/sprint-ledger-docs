@@ -32,7 +32,7 @@
 <!-- /site:header -->
 
 <h1>How Sprint Ledger counts</h1>
-<p class="byline">Definitions and deviations &middot; updated 17 September 2026 (app version 2.6.0)</p>
+<p class="byline">Definitions and deviations &middot; updated 17 September 2026 (app version 2.9.0)</p>
 
 <p>Every answer Sprint Ledger gives, in the JQL functions, the fields, the gadget and the export, comes from one reconstruction of each sprint, built from the history Jira keeps for every issue. This page says exactly how that reconstruction decides what an issue did in a sprint, so that a number can be checked, and where it differs from Jira's own Sprint Report.</p>
 
@@ -77,18 +77,20 @@
 </table>
 
 <h2 id="sprint-report">How the numbers compare with the Sprint Report</h2>
-<p>Three differences are expected, and none is a bug:</p>
+<p>Four differences are expected, and none is a bug:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td>Subtasks missing from both</td><td>Jira's report leaves them out and so does Sprint Ledger by default. The admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue added after the start and then removed appears in both <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while the report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and a scope-change report needs both. The report shows each issue once, in one list.</td></tr>
 <tr><td>An old sprint's completed count differs</td><td>"Completed" follows the board's columns as they are now. If the columns were rearranged after the sprint closed, the count can move. Defining done by status category on the admin page makes the answer independent of the columns.</td></tr>
+<tr id="done-before-start"><td>An issue that was already done when the sprint started counts in <code>completedIn</code>, while the report lists it under "Issues completed outside of this sprint"</td><td>Jira's report counts an issue as completed in a sprint only if it became done after the sprint started; an issue that was done at the start and stayed done until the close is "completed outside", however it joined the sprint. Sprint Ledger counts every issue that was in the sprint and done at the close as completed. This happens most often with an issue carried over and finished between two sprints.</td></tr>
 </tbody>
 </table>
 <p>On the app's test site, fifty closed sprints were compared list by list with Jira's Sprint Report, ten of them built to exercise the cases above and forty sampled from five years of a larger project: forty-nine agreed exactly, and the fiftieth differed only by the second case in the table.</p>
 
 <h3 id="check">Checking a sprint yourself</h3>
+<p>The quickest check is on the admin page: <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> reads Jira's own report for the last three closed sprints of a board and compares it with the ledger issue by issue, including each issue's estimate at the start and at the close, and names every difference with its reason. To check a sprint by hand:</p>
 <ol>
 <li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose a closed sprint.</li>
 <li>Run these with the sprint's name, and compare each list with the report's "Completed Issues", "Issues Not Completed", "Issues Removed From Sprint" and the asterisked issues:</li>
@@ -99,7 +101,7 @@ issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <p>For an issue that appears in one list and not the other, open it and add the <a href="fields.html#sprint-history">Sprint history (Ledger)</a> panel: it shows when the issue entered and left the sprint and the status it had at the close, which is usually the whole explanation.</p>
-<p>Anything that differs other than the three cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
+<p>Anything that differs other than the four cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
 
 <!-- site:footer -->
 <footer class="site">
