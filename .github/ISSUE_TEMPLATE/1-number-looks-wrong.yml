@@ -1,0 +1,64 @@
+# T50. Published to github.com/damyor/sprint-ledger-docs by tools/publish-docs.sh; edit it here.
+name: A number looks wrong
+description: A count, a tag or a field disagrees with what you expect, or with Jira's Sprint Report.
+title: 'Number looks wrong: '
+labels: [accuracy]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This repository is public. Leave out anything about your site you would not publish — issue
+        keys, sprint names, people. If the details matter, write to
+        `damyor+sprintledger@gmail.com` instead; the answer comes just as fast.
+
+
+        Before you write: [How the numbers
+        compare](https://damyor.github.io/sprint-ledger-docs/classification.html) lists the
+        differences from Jira's Sprint Report that are expected rather than wrong, and the admin
+        page's **Compare with Jira's Sprint Report** runs that comparison on your own board and
+        names the reason for every difference it finds. Its answer is the most useful thing you can
+        put below.
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: The version at the top of the app's admin page — not the developer console, which is wrong about this.
+      placeholder: '2.11.0'
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What the app says, and what you expected
+      description: The number as the app gives it, the number you expected, and where each comes from (a field, a JQL function, the gadget, the export, Jira's Sprint Report).
+    validations:
+      required: true
+  - type: textarea
+    id: comparison
+    attributes:
+      label: What the built-in comparison says
+      description: >-
+        Administration → the app's admin page → Compare with Jira's Sprint Report, for the board
+        this is about. Paste its summary. It changes nothing on your site.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where you see it
+      multiple: true
+      options:
+        - A custom field on an issue
+        - A JQL function in a search or a filter
+        - The dashboard gadget
+        - The CSV export
+        - The issue panel (Sprint history)
+        - The admin page
+    validations:
+      required: true
+  - type: textarea
+    id: sprint
+    attributes:
+      label: The sprint
+      description: >-
+        Whether it is open, future or closed; roughly how many issues it holds; whether issues were
+        moved in or out after it started, or moved between boards; whether the board is
+        company-managed or team-managed. No names needed.

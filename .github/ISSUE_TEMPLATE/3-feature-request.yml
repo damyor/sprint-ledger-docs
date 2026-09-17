@@ -1,0 +1,48 @@
+# T50. Published to github.com/damyor/sprint-ledger-docs by tools/publish-docs.sh; edit it here.
+name: Feature request
+description: Something the app should answer and does not.
+title: 'Request: '
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Requests in public are useful: other people can say they want the same thing, which is how
+        this gets prioritised. This repository is public, so leave out anything about your site you
+        would not publish.
+
+
+        The [changelog](https://damyor.github.io/sprint-ledger-docs/changelog.html) is worth a look
+        first — the app ships small changes often, and some of what is asked for is already there.
+  - type: textarea
+    id: question
+    attributes:
+      label: The question you are trying to answer
+      description: >-
+        Not the feature — the question. "Which issues were added to this sprint after it started, and
+        by whom" is a question; "add a column" is a feature. The question is what makes it possible
+        to say whether the app can already answer it another way.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: How you get that answer today
+      description: By hand, in a spreadsheet, from another app, or not at all.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where you would want it
+      multiple: true
+      options:
+        - As a JQL function, so it works in a filter and a board
+        - As a field, so it can be a column, a sort or a grouping
+        - In the dashboard gadget
+        - In the CSV export
+        - On the issue panel
+        - Somewhere else, described below
+  - type: input
+    id: size
+    attributes:
+      label: Your site's size
+      description: Roughly how many Jira users, and how many boards you would use this on. It says how much a change is worth.

@@ -1,0 +1,22 @@
+# T50. Published to github.com/damyor/sprint-ledger-docs by tools/publish-docs.sh; edit it here.
+#
+# Blank issues are off so that every report arrives with the site version and the sprint it is about,
+# which is what makes an answer possible without a round trip. The contact links carry the two kinds
+# of message that must not become a public issue.
+blank_issues_enabled: false
+contact_links:
+  - name: Email support
+    url: https://damyor.github.io/sprint-ledger-docs/support.html
+    about: >-
+      Anything you would rather not publish — your site's address, issue keys, sprint names, people —
+      goes to the support address instead. Answers come at the same speed, and faster for beta sites.
+  - name: A security vulnerability
+    url: https://damyor.github.io/sprint-ledger-docs/security.html
+    about: >-
+      Never a public issue. Email it, with Security in the subject line; you get an acknowledgement
+      within two business days and safe harbour for good-faith research.
+  - name: The documentation
+    url: https://damyor.github.io/sprint-ledger-docs/
+    about: >-
+      How the numbers are counted, the JQL functions, the fields, the gadget, the export, the FAQ and
+      the changelog. Most questions are answered there.

@@ -1,0 +1,62 @@
+# T50. Published to github.com/damyor/sprint-ledger-docs by tools/publish-docs.sh; edit it here.
+name: Something is broken
+description: A page does not load, the reconstruction fails, the fields or the functions stopped answering.
+title: 'Broken: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        **If the app has stopped working on your site, email
+        `damyor+sprintledger@gmail.com` with `Urgent` in the subject line instead.** That is answered
+        within 24 hours, weekends included; a public issue is not watched at the weekend.
+
+
+        This repository is public. Leave out your site's address, issue keys, sprint names and
+        people. Never paste a password or an API token: Sprint Ledger never needs one, and nobody
+        supporting it will ask for one.
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: The version at the top of the app's admin page.
+      placeholder: '2.11.0'
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What you did, what you expected, what happened
+      description: Step by step, with the time it happened and your time zone. A screenshot helps, with the site's name cropped out.
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      multiple: true
+      options:
+        - The admin page
+        - The project settings page
+        - The dashboard gadget
+        - The CSV export
+        - The issue panel (Sprint history)
+        - A JQL function in a search or a filter
+        - The custom fields on issues
+        - The first reconstruction of a board's history
+    validations:
+      required: true
+  - type: textarea
+    id: admin
+    attributes:
+      label: What the admin page says
+      description: >-
+        Its status section: whether a reconstruction is running, finished or failed, and any message
+        it shows. If a run failed, its error line is the single most useful thing here.
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: The two things that explain most of these
+      options:
+        - label: The board's filter is shared with the project, so the app can see the board.
+        - label: On a team-managed project, the app's fields are on the issue layout.
