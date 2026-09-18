@@ -31,6 +31,14 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.12.0">2.12.0 &middot; 18 September 2026</h2>
+<ul>
+<li>The six-hourly check that keeps the ledger in step with Jira now asks your site for much less. It
+used to list every issue of every active sprint; it now asks first whether anything in the sprint has
+moved since its last check, and reads the issues only when something has. A sprint nobody touched
+costs two questions instead of a full listing. What the app records and reports is unchanged.</li>
+</ul>
+
 <h2 id="v2.11.0">2.11.0 &middot; 17 September 2026</h2>
 <ul>
 <li>Fixed: with <a href="admin.html#setting-actors">Who moved each issue</a> turned off, the app still kept the account ID of whoever moved an issue in the issue's stored sprint history, and a move made after the setting was turned off could store it again. Nothing is stored now while the setting is off; IDs stored earlier stay until <em>Anonymise user ids</em>.</li>
