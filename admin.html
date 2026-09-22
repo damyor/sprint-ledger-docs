@@ -27,7 +27,7 @@
 <!-- /site:header -->
 
 <h1>Administration</h1>
-<p class="byline">For Jira and project administrators &middot; updated 17 September 2026 (app version 2.6.0)</p>
+<p class="byline">For Jira and project administrators &middot; updated 22 September 2026 (app version 2.13.0)</p>
 
 <p>Sprint Ledger needs almost no administration: installing it starts the reconstruction of every sprint board's history, and from then on it keeps itself current. This page covers what there is to look at and change, and what to do when something looks wrong. Installing and the first hours are in <a href="getting-started.html">Getting started</a>.</p>
 
@@ -62,6 +62,7 @@
 <h2 id="projects">2. Projects</h2>
 <p>Sprint Ledger tracks every project that has a board with sprints, unless you choose otherwise. <em>Every project with a sprint board</em> keeps it that way, including projects created later; turning it off lets you switch projects on and off one by one.</p>
 <p>A project appears in the list once the app can see one of its boards. The app writes no field values into a project that is turned off, and its issues never appear in the functions' answers. Turning a project off stops following it; the values already on its issues stay but are no longer kept current. Turning it back on marks its boards as not read, and reading them again brings its history up to date.</p>
+<p>A board's filter may take in issues from several projects, and Sprint Ledger counts every issue that was in one of a tracked board's sprints, whichever project it belongs to, as the Sprint Report does. A project with no board of its own never appears in the list; its issues are counted while <em>Every project with a sprint board</em> is on, and left out while projects are chosen one by one. Before version 2.13.0 a reconstruction read only the issues of listed projects, so a site with such boards should press <em>Rebuild every tracked board</em> once after the update.</p>
 
 <h2 id="boards">3. Boards and reconstructions</h2>
 <p>The boards table lists each board the app has found, its project, how many sprints it has, and its state: <code>pending</code> (not read yet), <code>running</code>, <code>waiting</code> (for the hourly API budget), <code>done</code>, <code>failed</code>, or <code>no sprints</code> for a board that does not use sprints, such as a Kanban board, which is skipped.</p>

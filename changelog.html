@@ -31,6 +31,23 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.13.0">2.13.0 &middot; 22 September 2026</h2>
+<ul>
+<li>Fixed: on a board whose filter takes in issues from several projects, a reconstruction read only
+the issues of the projects in the admin page's list, so the issues of a project without a board of its
+own were missing from the board's closed sprints. It now reads every issue that was in one of a tracked
+board's sprints, whichever project it belongs to, including issues removed from a sprint back to the
+backlog. <strong>If your boards take in other projects' issues, press <em>Rebuild every tracked
+board</em> once</strong> on the <a href="admin.html#boards">admin page</a>; active sprints were already
+kept up to date as their issues moved.</li>
+<li>A reconstruction of one board no longer drops the estimates another board reads from issues that
+are on both boards.</li>
+<li><a href="classification.html#sprint-report">Compare with Jira's Sprint Report</a> explains two more
+differences instead of counting them: an issue that was in the sprint but no longer matches the board's
+filter, which Jira's report leaves out, and an issue of a project the app is turned off for.</li>
+<li>The gadget and the project settings page, where they send you to the admin page, now give its place in today's Jira: Settings &rarr; Marketplace apps &rarr; Sprint Ledger.</li>
+</ul>
+
 <h2 id="v2.12.0">2.12.0 &middot; 18 September 2026</h2>
 <ul>
 <li>The six-hourly check that keeps the ledger in step with Jira now asks your site for much less. It

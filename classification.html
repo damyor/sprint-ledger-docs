@@ -79,13 +79,15 @@
 </table>
 
 <h2 id="sprint-report">How the numbers compare with the Sprint Report</h2>
-<p>Three differences are expected, and none is a bug:</p>
+<p>Five differences are expected, and none is a bug:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td>Subtasks missing from both</td><td>Jira's report leaves them out and so does Sprint Ledger by default. The admin page's subtask setting counts them.</td></tr>
 <tr><td>An issue added after the start and then removed appears in both <code>addedAfterSprintStart</code> and <code>removedFromSprint</code>, while the report lists it only under "Issues Removed From Sprint"</td><td>Both statements are true, and a scope-change report needs both. The report shows each issue once, in one list.</td></tr>
 <tr><td>An old sprint's completed count differs</td><td>"Completed" follows the board's columns as they are now. If the columns were rearranged after the sprint closed, the count can move. Defining done by status category on the admin page makes the answer independent of the columns.</td></tr>
+<tr><td>An issue that was in the sprint but no longer matches the board's filter is counted by Sprint Ledger and missing from the report</td><td>Jira's report shows only the sprint's issues that the board's filter matches at the moment you open it, so it changes whenever the filter or the issue changes. Sprint Ledger counts every issue that was in the sprint, as JQL's <code>sprint = &hellip;</code> does, so a sprint's history stays as it was. The admin page's check asks Jira whether the filter still matches and names these issues.</td></tr>
+<tr><td>On a site where only some projects are turned on, an issue of a project that is off is listed by the report and missing from Sprint Ledger</td><td>Sprint Ledger reads no issue of a project it is turned off for. With "Every project with a sprint board" on, it counts every issue on a tracked board's sprints, including issues of projects that have no board of their own.</td></tr>
 </tbody>
 </table>
 <p>On the app's test site, fifty closed sprints were compared list by list with Jira's Sprint Report, ten of them built to exercise the cases above and forty sampled from five years of a larger project: forty-nine agreed exactly, and the fiftieth differed only by the second case in the table.</p>
@@ -102,7 +104,7 @@ issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <p>For an issue that appears in one list and not the other, open it and add the <a href="fields.html#sprint-history">Sprint history (Ledger)</a> panel: it shows when the issue entered and left the sprint and the status it had at the close, which is usually the whole explanation.</p>
-<p>Anything that differs other than the three cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
+<p>Anything that differs other than the five cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
 
 <!-- site:footer -->
 <footer class="site">
