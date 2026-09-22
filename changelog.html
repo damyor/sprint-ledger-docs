@@ -31,6 +31,15 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.14.0">2.14.0 &middot; 22 September 2026</h2>
+<ul>
+<li>Fixed: on a site whose issues have long sprint histories, a reconstruction could stop with "request
+entity too large" while writing issue histories, because the app sized those writes by the number of
+rows and not by their size. Writes are now sized by bytes, and large histories are read in smaller
+pages. A site whose last reconstruction stopped this way restarts it by itself within the hour after
+this version arrives; nothing needs pressing.</li>
+</ul>
+
 <h2 id="v2.13.0">2.13.0 &middot; 22 September 2026</h2>
 <ul>
 <li>Fixed: on a board whose filter takes in issues from several projects, a reconstruction read only
