@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://damyor.github.io/sprint-ledger-docs/</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/getting-started</loc><lastmod>2026-09-21</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/getting-started</loc><lastmod>2026-09-23</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/functions</loc><lastmod>2026-09-17</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/fields</loc><lastmod>2026-09-17</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/gadget</loc><lastmod>2026-09-17</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/export</loc><lastmod>2026-09-17</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/classification</loc><lastmod>2026-09-22</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/admin</loc><lastmod>2026-09-22</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/faq</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/faq</loc><lastmod>2026-09-23</lastmod></url>
   <url><loc>https://damyor.github.io/sprint-ledger-docs/changelog</loc><lastmod>2026-09-23</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/support</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/security</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/privacy</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/terms</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/four-ways-to-find-issues-added-after-sprint-start.html</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/how-to-find-issues-removed-from-a-sprint.html</loc><lastmod>2026-09-17</lastmod></url>
-  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/sprint-start-and-end-dates-in-jql.html</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/support</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/security</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/privacy</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/terms</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/four-ways-to-find-issues-added-after-sprint-start.html</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/how-to-find-issues-removed-from-a-sprint.html</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://damyor.github.io/sprint-ledger-docs/articles/sprint-start-and-end-dates-in-jql.html</loc><lastmod>2026-09-23</lastmod></url>
 </urlset>
