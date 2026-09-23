@@ -31,6 +31,15 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.15.0">2.15.0 &middot; 23 September 2026</h2>
+<ul>
+<li>Changed: "Compare with Jira's Sprint Report" now records, for each issue that still differs, what
+each side lists and what the app holds about it (membership times, status IDs, whether an estimate is
+stored and when it changed) in the app's log in full; before, part of that record was cut short on its
+way into the log. As before, the log holds IDs, counts and times only, never issue content or field
+values, so a difference can be looked into without asking your site for anything.</li>
+</ul>
+
 <h2 id="v2.14.0">2.14.0 &middot; 22 September 2026</h2>
 <ul>
 <li>Fixed: on a site whose issues have long sprint histories, a reconstruction could stop with "request
