@@ -31,6 +31,22 @@
 
 <p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v2.16.0">2.16.0 &middot; 23 September 2026</h2>
+<ul>
+<li>Changed: "Compare with Jira's Sprint Report" names two more differences as documented instead of
+counting them as unexplained. An issue put into a sprint after the sprint had closed, which Jira's
+report lists as removed or as completed outside the sprint, is left out of that sprint by Sprint
+Ledger because it was never in it while the sprint ran. And for an issue removed from a sprint and
+re-estimated afterwards, Jira's report shows the estimate it had at the close, while Sprint Ledger
+keeps the one it had when it left, which is the work its removal took out. Both are described on
+<a href="classification.html#sprint-report">How Sprint Ledger counts</a>.</li>
+<li>Changed: when an issue that both sides list is still in different lists, the check also records
+Jira's own account of it in the app's log: the sprints Jira's report says it belongs to, and the
+times Jira recorded it joining, leaving and becoming done. That takes one more API point for such a
+sprint. As before, the log holds IDs, status IDs and times only, never issue content or field
+values.</li>
+</ul>
+
 <h2 id="v2.15.0">2.15.0 &middot; 23 September 2026</h2>
 <ul>
 <li>Changed: "Compare with Jira's Sprint Report" now records, for each issue that still differs, what

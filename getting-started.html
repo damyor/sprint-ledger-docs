@@ -165,7 +165,7 @@ issue in addedAfterSprintStart("ACME Sprint 41")
 issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
-<p>Three differences are expected and are not bugs:</p>
+<p>These are the differences you are most likely to see, and none is a bug:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
@@ -174,7 +174,7 @@ issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <tr><td>An old sprint disagrees about what counts as completed</td><td>"Completed" means the issue's status was in the board's rightmost column. If the board's columns were rearranged since that sprint closed, the current mapping is used. The admin page can define done by status category instead.</td></tr>
 </tbody>
 </table>
-<p>An issue that was committed, removed and then put back counts as committed, and one that was already done when the sprint started and still done at the close is completed outside the sprint (the <code>o:</code> tag, in neither <code>completedIn</code> nor <code>carriedOverFrom</code>), exactly as Jira's report treats them. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
+<p>An issue that was committed, removed and then put back counts as committed, and one that was already done when the sprint started and still done at the close is completed outside the sprint (the <code>o:</code> tag, in neither <code>completedIn</code> nor <code>carriedOverFrom</code>), exactly as Jira's report treats them. <a href="classification.html#sprint-report">How Sprint Ledger counts</a> lists four rarer differences as well, among them an issue put into a sprint after it closed and a removed issue re-estimated after it left. Anything else that differs is a bug and we want to hear about it: the sprint, the issue key and what each side said is enough.</p>
 
 <h2 id="privacy">9. Privacy, data and uninstalling</h2>
 <p>The full <a href="privacy.html">privacy policy</a> is on this site; in short:</p>

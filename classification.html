@@ -57,7 +57,7 @@
 <p id="done-before-start"><strong>Completed outside</strong> is Jira's own rule. An issue that was already done when the sprint started, and still done when it closed, did no work in that sprint, so Jira's report lists it apart and counts it neither as completed nor as not completed. Sprint Ledger does the same: such an issue is in neither <code>completedIn()</code> nor <code>carriedOverFrom()</code>, it does not count in say/do, and its tag is <code>o:</code>, so <code>"Sprint tags (Ledger)" = "o:5231"</code> finds the ones of sprint 5231. The commonest case is an issue carried over and finished between two sprints. An issue that was reopened during the sprint and done again, or that became done after the start while it was out of the sprint, is completed, as in the report.</p>
 <p><strong>Done</strong> means, by default, a status in the rightmost column of the sprint's board, as the Sprint Report counts it. An administrator can switch to "any status in the Done category" on the <a href="admin.html#settings">admin page</a>; the whole history is then classified again, without reading Jira.</p>
 <p><strong>Completed, carried over and completed outside</strong> are final only for closed sprints. For the active sprint they describe the state now and change until it closes, which is why <code>completedIn()</code> and <code>carriedOverFrom()</code> answer for closed sprints only.</p>
-<p><strong>Estimates.</strong> A committed issue's estimate is the one it had at the start, an added issue's the one it had when it joined, as the Sprint Report does; the completed estimate is the one at the close, or at the moment of removal for a removed issue. When the estimate was never changed, its current value is used.</p>
+<p><strong>Estimates.</strong> A committed issue's estimate is the one it had at the start, an added issue's the one it had when it joined, as the Sprint Report does; the completed estimate is the one at the close, or at the moment of removal for a removed issue, which is the work its removal took out of the sprint. The Sprint Report shows a removed issue's estimate as it was at the close instead, so the two differ when an issue was re-estimated after it left (see the <a href="#sprint-report">differences</a> below). When the estimate was never changed, its current value is used.</p>
 
 <h2 id="edge-cases">The awkward cases</h2>
 <table>
@@ -79,7 +79,7 @@
 </table>
 
 <h2 id="sprint-report">How the numbers compare with the Sprint Report</h2>
-<p>Five differences are expected, and none is a bug:</p>
+<p>Seven differences are expected, and none is a bug:</p>
 <table>
 <thead><tr><th>You will see</th><th>Why</th></tr></thead>
 <tbody>
@@ -88,6 +88,8 @@
 <tr><td>An old sprint's completed count differs</td><td>"Completed" follows the board's columns as they are now. If the columns were rearranged after the sprint closed, the count can move. Defining done by status category on the admin page makes the answer independent of the columns.</td></tr>
 <tr><td>An issue that was in the sprint but no longer matches the board's filter is counted by Sprint Ledger and missing from the report</td><td>Jira's report shows only the sprint's issues that the board's filter matches at the moment you open it, so it changes whenever the filter or the issue changes. Sprint Ledger counts every issue that was in the sprint, as JQL's <code>sprint = &hellip;</code> does, so a sprint's history stays as it was. The admin page's check asks Jira whether the filter still matches and names these issues.</td></tr>
 <tr><td>On a site where only some projects are turned on, an issue of a project that is off is listed by the report and missing from Sprint Ledger</td><td>Sprint Ledger reads no issue of a project it is turned off for. With "Every project with a sprint board" on, it counts every issue on a tracked board's sprints, including issues of projects that have no board of their own.</td></tr>
+<tr id="added-after-close"><td>An issue put into a sprint after the sprint closed is listed by the report and missing from Sprint Ledger</td><td>Jira's own screens refuse to add an issue to a closed sprint, yet an issue's history can show a sprint added after it closed. Jira's report then lists the issue under "Issues Removed From Sprint", or under "Issues completed outside of this sprint" when it was already done before the sprint started, although it was never in the sprint while the sprint ran. Sprint Ledger leaves it out of that sprint. The admin page's check reads when each such issue joined and names it.</td></tr>
+<tr id="removed-estimate"><td>A removed issue's estimate differs</td><td>For an issue removed from the sprint, the report shows the estimate it had when the sprint closed; Sprint Ledger keeps the one it had when it left, which is the work its removal took out of the sprint. The two differ only when the issue was re-estimated after it left, and the admin page's check names those issues.</td></tr>
 </tbody>
 </table>
 <p>On the app's test site, fifty closed sprints were compared list by list with Jira's Sprint Report, ten of them built to exercise the cases above and forty sampled from five years of a larger project: forty-nine agreed exactly, and the fiftieth differed only by the second case in the table.</p>
@@ -104,7 +106,7 @@ issue in removedFromSprint("ACME Sprint 41")
 issue in completedIn("ACME Sprint 41")
 issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <p>For an issue that appears in one list and not the other, open it and add the <a href="fields.html#sprint-history">Sprint history (Ledger)</a> panel: it shows when the issue entered and left the sprint and the status it had at the close, which is usually the whole explanation.</p>
-<p>Anything that differs other than the five cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
+<p>Anything that differs other than the seven cases above is a bug, and we want to hear about it: the sprint, the issue key and what each side said is enough (<a href="support.html">Support</a>).</p>
 
 <!-- site:footer -->
 <footer class="site">
