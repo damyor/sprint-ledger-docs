@@ -29,7 +29,23 @@
 <h1>Changelog</h1>
 <p class="byline">Every update since the private beta opened, newest first</p>
 
-<p>Updates install on every site by themselves; none of these needed anything from a site's administrators. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
+<p>Updates install on every site by themselves, except 3.0.0, which a Jira administrator approves once. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
+
+<h2 id="v3.0.0">3.0.0 &middot; 24 September 2026</h2>
+<ul>
+<li><strong>A Jira administrator approves this update once</strong>, where the site's apps are managed, because it
+adds Sprint Ledger's Marketplace licence and two permissions. Until then the site keeps the version before it,
+which goes on working as it did.</li>
+<li>New: the Marketplace licence. Sprint Ledger is free for sites of up to 10 users. A site that installed
+during the private beta keeps every feature without a subscription until 31 December 2026.</li>
+<li>Changed: the CSV export names who added or removed an issue as Jira shows that person to you, instead of
+the account ID (the permission to read user details).</li>
+<li>Changed: the issue panel shows times in the time zone of your Jira profile, as Jira's own date fields do
+(the same permission).</li>
+<li>New: the account IDs the app stores are checked with Atlassian's personal data reporting API every cycle,
+and a closed account's ID is erased within that cycle (the permission to report personal data). The
+<a href="privacy.html#personal">privacy policy</a> says more.</li>
+</ul>
 
 <h2 id="v2.16.0">2.16.0 &middot; 23 September 2026</h2>
 <ul>

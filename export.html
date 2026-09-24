@@ -70,14 +70,14 @@
 <tbody>
 <tr><td>Issue key, Summary, Issue type, Subtask</td><td>The issue as Jira shows it now; Subtask is TRUE or FALSE</td></tr>
 <tr><td>Scope</td><td>Committed, Added after start, Removed, or Added then removed</td></tr>
-<tr><td>Added at (UTC), Added by (account id)</td><td>When the issue first joined the sprint (before the start, for a committed issue) and the account that added it</td></tr>
-<tr><td>Removed at (UTC), Removed by (account id)</td><td>When it was taken out and by whom; empty unless it was removed</td></tr>
+<tr><td>Added at (UTC), Added by</td><td>When the issue first joined the sprint (before the start, for a committed issue) and who added it</td></tr>
+<tr><td>Removed at (UTC), Removed by</td><td>When it was taken out and by whom; empty unless it was removed</td></tr>
 <tr><td>Estimate at start, Estimate at close</td><td>The estimate when it entered the sprint (at the start for a committed issue) and at the close, or when it was removed. "(hours)" for time estimates</td></tr>
 <tr><td>Status at close</td><td>The issue's status when the sprint closed</td></tr>
 <tr><td>Completed, Carried over, Completed outside</td><td>TRUE or FALSE, at most one of them TRUE; for the active sprint they are provisional until it closes. Completed outside is the last column</td></tr>
 </tbody>
 </table>
-<p><strong>Who added or removed an issue</strong> is the person's Atlassian account ID rather than their name, because showing names would need an extra permission every installed site would have to approve. An administrator can turn off storing account IDs on the <a href="admin.html#settings">admin page</a>; the two columns are then empty for changes made afterwards.</p>
+<p><strong>Who added or removed an issue</strong> is named as Jira shows that person to you: the app asks Jira for the names when you export and writes them into the file, without storing them. When Jira gives no name for an account, a closed one for instance, the file shows its Atlassian account ID. An administrator can turn off storing account IDs on the <a href="admin.html#settings">admin page</a>; the two columns are then empty for changes made afterwards.</p>
 
 <h2 id="format">The file format</h2>
 <ul>

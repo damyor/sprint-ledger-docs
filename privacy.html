@@ -27,7 +27,7 @@
 <!-- /site:header -->
 
 <h1>Privacy policy</h1>
-<p class="byline">Sprint Ledger for Jira Cloud &middot; in effect 23 September 2026 (the previous version was in effect from 17 September 2026)</p>
+<p class="byline">Sprint Ledger for Jira Cloud &middot; in effect 24 September 2026 (the previous version was in effect from 23 September 2026)</p>
 
 <p>Sprint Ledger is published by <strong>Yord Soft EOOD</strong>, a company registered in Bulgaria under EIK 203874601 at 12 Nikolay Liliev St., floor 1, office 2, 1421 Sofia, and this policy covers the Sprint Ledger app for Jira Cloud. It describes what the app stores, where it is stored, who can reach it and how to have it removed. Questions and requests: <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>.</p>
 
@@ -46,12 +46,13 @@
 <p>The app does <strong>not</strong> store issue summaries, descriptions, comments, attachments, worklogs or any other issue content, and it does not store user names or email addresses.</p>
 
 <h2 id="personal">Personal data</h2>
-<p>The only personal data the app stores is the Atlassian account ID attached to a sprint membership change. It is kept so that a scope change can be attributed to the person who made it, which is the question teams ask of a scope report. No profile information is copied: an account ID is resolved to a name only by Jira itself, when it displays it to someone who already has access.</p>
+<p>The only personal data the app stores is the Atlassian account ID attached to a sprint membership change. It is kept so that a scope change can be attributed to the person who made it, which is the question teams ask of a scope report. No profile information is copied. An account ID becomes a name only where Jira shows it to someone who already has access: in Jira's own screens, and in the CSV export, where the app asks Jira for the names of the accounts on each page as the person exporting and writes them into the file on that person's computer without storing them. In the same way the issue panel asks Jira for the viewer's time zone, to show times as Jira's own fields do, and keeps nothing of it.</p>
 <p>If you would rather the app did not keep account IDs at all, a Jira administrator turns off &ldquo;Store account ids&rdquo; on the app's admin page, and from then on the app stores nothing in their place. The same page has an &ldquo;Anonymise user ids&rdquo; action that removes every account ID already stored, from the sprint events and from the issue timelines, and turns capture off in the same step; counts, dates and query answers do not change.</p>
+<p><strong>Closed accounts.</strong> Once every reporting cycle that Atlassian sets (a week at present), the app reports the account IDs it stores, with the date each was last seen, to Atlassian's personal data reporting API, which answers whether any of them has been closed. A closed account's ID is erased from the sprint events and the issue timelines within that cycle, as &ldquo;Anonymise user ids&rdquo; would erase it, and the app stores nothing in its place.</p>
 <p>The app also records the account ID of the administrator who opens its admin page for the length of that request, in order to check that they hold the Jira administrator permission. That check is not stored.</p>
 
 <h2 id="where">Where the data lives</h2>
-<p>All of it lives in Forge storage &mdash; Forge SQL and the Forge key-value store &mdash; provisioned by Atlassian for your installation of the app and reachable only by that installation. It therefore sits inside Atlassian's infrastructure and follows your site's data residency. The app holds no database, no object store and no account of its own, and it makes no network call to any host other than your own Jira site's API.</p>
+<p>All of it lives in Forge storage &mdash; Forge SQL and the Forge key-value store &mdash; provisioned by Atlassian for your installation of the app and reachable only by that installation. It therefore sits inside Atlassian's infrastructure and follows your site's data residency. The app holds no database, no object store and no account of its own. Besides your own Jira site's API, the one call it makes is to Atlassian's personal data reporting API, part of the same platform, which receives only the stored account IDs and the date each was last seen (see <a href="#personal">Personal data</a>).</p>
 <p><strong>Countries.</strong> Atlassian hosts Forge storage on Amazon Web Services in the data residency location of your Jira site: Australia, Canada, the European Union, Germany, India, Japan, Singapore, South Korea, Switzerland, the United Kingdom or the United States, as your site's administrators have chosen. A site with no location chosen is in Atlassian's global location, where Atlassian decides the region and may move data between regions. Atlassian's <a href="https://developer.atlassian.com/platform/forge/data-residency/">data residency documentation for Forge</a> lists the regions behind each location.</p>
 <p>Sprint Ledger is eligible for Atlassian's <a href="https://go.atlassian.com/runs-on-atlassian">Runs on Atlassian</a> programme, which is Atlassian's own check that an app stores its data on Atlassian infrastructure and egresses nothing.</p>
 
@@ -69,6 +70,7 @@
 <h2 id="changes">Changes to this policy</h2>
 <p>If what the app stores changes, this page changes with it and the date at the top moves. Beta sites are told by email when a change affects what is stored.</p>
 <p>What changed on 17 September 2026: the countries where the data is stored; the retention periods Atlassian applies after an uninstall, which the previous version described as immediate deletion; the number of fields, ten since the app's 2.6.0 update. What the app stores did not change.</p>
+<p>What changed on 24 September 2026, with the app's 3.0.0 update: closed accounts are now found through Atlassian's personal data reporting API and their IDs erased; the CSV export names people as Jira shows them to the person exporting, and the issue panel reads the viewer's time zone, neither of which the app stores. What the app stores did not change.</p>
 <p>What changed on 23 September 2026: the publisher's full company name and registration details, and the contact address, which is now support@dyordanov.com. What the app stores did not change.</p>
 
 <!-- site:footer -->
