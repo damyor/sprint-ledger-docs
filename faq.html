@@ -32,7 +32,7 @@
 <!-- /site:header -->
 
 <h1>Frequently asked questions</h1>
-<p class="byline">Updated 23 September 2026</p>
+<p class="byline">Updated 8 October 2026</p>
 
 <h2 id="using">Using it</h2>
 <dl class="faq">
@@ -53,6 +53,9 @@
 
 <dt id="automation">Can I use the functions in automation rules and saved filters?</dt>
 <dd>Yes: anywhere Jira takes JQL, including automation conditions, board filters, dashboard gadgets and filter subscriptions. Jira stores a function's answer and reuses it; the app updates those stored answers when sprints start, complete or are renamed, and daily. See <a href="functions.html#saved">Saved filters, boards and automation</a>.</dd>
+
+<dt id="same-name">Another app has a function with the same name</dt>
+<dd>Jira does not guarantee which app answers when two apps register the same JQL function name. Sprint Ledger checks every day whether Jira calls its own functions, and the admin page names any that another app answers. Every function also answers under a name only Sprint Ledger registers, with <code>ledger</code> in front: <code>ledgerAddedAfterSprintStart()</code> instead of <code>addedAfterSprintStart()</code>, and so on. <a href="functions.html#same-name">More on the functions page.</a></dd>
 
 <dt id="renamed-fields">A saved filter says "Field ... does not exist"</dt>
 <dd>The fields were renamed in September 2026, and Jira does not rename fields inside saved queries. Replace the old name with the new one from the <a href="fields.html#renamed">table of names</a>.</dd>
@@ -97,10 +100,10 @@
 <h2 id="buying">Price and support</h2>
 <dl class="faq">
 <dt id="price">What does it cost?</dt>
-<dd>During the private beta it is free. When it is listed on the Atlassian Marketplace, sites with up to 10 users stay free, beta sites keep it free for 60 days from the listing date, and the price for larger sites is shown on the listing, with Atlassian's usual free trial.</dd>
+<dd>Sites with up to 10 users use it free. Larger sites subscribe through its <a href="https://marketplace.atlassian.com/apps/3329518260">Atlassian Marketplace listing</a>, which shows the price, after Atlassian's usual free trial. Sites that installed during the private beta keep every feature without a subscription until 31 December 2026.</dd>
 
-<dt id="beta">How do I join the beta?</dt>
-<dd>Sign up at <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">forms.gle/9z8uFRAjMWzuGpSg9</a>; you get one email, with the install link.</dd>
+<dt id="beta">How do I install it?</dt>
+<dd>From its <a href="https://marketplace.atlassian.com/apps/3329518260">Atlassian Marketplace listing</a>, as a Jira administrator: pick the site, review the permissions and install. <a href="getting-started.html">Getting started</a> says what happens next.</dd>
 
 <dt id="help">How do I get help?</dt>
 <dd>Email <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>. The <a href="support.html">support page</a> says how fast you get an answer and what to include.</dd>

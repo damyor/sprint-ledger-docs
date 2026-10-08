@@ -28,7 +28,7 @@
 <body>
 <nav><a href="../">Sprint Ledger</a> / Articles</nav>
 <h1>How to find issues removed from a sprint in Jira Cloud (2026)</h1>
-<p class="byline">Damian Plamenov Yordanov, 17 September 2026</p>
+<p class="byline">Damian Plamenov Yordanov, 17 September 2026, updated 8 October 2026</p>
 <p>A story leaves the sprint in its second week, and in the review someone asks what was taken out, and when. Jira has the answer in every issue's history, but not as a query. The JQL people try first fails: <code>sprint was "Sprint 41"</code> answers <em>History searches do not support the 'sprint' field</em>, and <code>sprint != "Sprint 41"</code> returns every issue that is not in the sprint now, which is nearly every issue on the site. <a href="https://jira.atlassian.com/browse/JRACLOUD-75868">JRACLOUD-75868</a>, the request to search for issues added to and removed from a sprint, has been open since January 2018 with more than 1,400 votes. Here are the ways teams answer the question today, what each one can and cannot do, and when each is enough. Disclosure up front: I am building the last one.</p>
 
 <h2>1. Read the Sprint Report</h2>
@@ -62,7 +62,7 @@
 <li><strong>Combined with the other functions</strong>: <code>issue in removedFromSprint("Sprint 41") AND issue not in committedTo("Sprint 42")</code> is what was dropped and not picked back up in the next sprint.</li>
 <li><strong>As columns</strong>: "Sprint scope (Ledger)" says Removed or Added then removed, and "Sprint removed (Ledger)" holds the date, so <code>"Sprint removed (Ledger)" &gt;= -14d</code> is an ordinary filter and a sortable column.</li>
 </ul>
-<p>It is retroactive for every sprint the site has run and follows the Sprint Report's definitions, with the differences documented. One of them is deliberate: an issue added after the start and removed again counts as both added and removed, because reporting on scope change needs both. It runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
+<p>It is retroactive for every sprint the site has run and follows the Sprint Report's definitions, with the differences documented. One of them is deliberate: an issue added after the start and removed again counts as both added and removed, because reporting on scope change needs both. It runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is on the <a href="https://marketplace.atlassian.com/apps/3329518260">Atlassian Marketplace</a>, priced at about $50 a month for a 100-user site and free for sites with up to 10 users.</p>
 
 <h2>Which one is enough?</h2>
 <table>
@@ -76,7 +76,7 @@
 <tr><td>Setup</td><td>none</td><td>none</td><td>a script and a schedule</td><td>an afternoon</td><td>install and wait for the reconstruction</td></tr>
 <tr><td>Cost for 100 users</td><td>free</td><td>free</td><td>free</td><td>free (rule runs)</td><td>about $50 a month</td></tr>
 </tbody></table>
-<p>If you look at one sprint in a retrospective, the Sprint Report is enough. If a single story is in dispute, its history is enough. If the numbers must reach a BI tool and someone can own a script, the endpoint is enough. If you only care from today on and can live with reading a log, the automation rule is enough. If you want removals as a query and a column for every sprint the site has run, that is the gap Sprint Ledger is meant to fill, and I am looking for beta sites that will tell me where it is wrong: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
+<p>If you look at one sprint in a retrospective, the Sprint Report is enough. If a single story is in dispute, its history is enough. If the numbers must reach a BI tool and someone can own a script, the endpoint is enough. If you only care from today on and can live with reading a log, the automation rule is enough. If you want removals as a query and a column for every sprint the site has run, that is the gap Sprint Ledger is meant to fill, and I would like to hear where it is wrong: <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>.</p>
 <p>The other half of the question, what was added after the start, has its own comparison: <a href="four-ways-to-find-issues-added-after-sprint-start.html">Four ways to find issues added after sprint start in Jira Cloud</a>. Sprint dates as a filter and a column are covered in <a href="sprint-start-and-end-dates-in-jql.html">Sprint start and end dates in JQL and as columns</a>.</p>
 <footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. Corrections: <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>.</footer>
 </body>

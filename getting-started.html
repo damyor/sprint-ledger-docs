@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Getting started with Sprint Ledger (private beta) | Sprint Ledger</title>
+<title>Getting started with Sprint Ledger | Sprint Ledger</title>
 <meta name="description" content="Install Sprint Ledger, watch the first reconstruction, and query what was added after sprint start, removed, committed, completed and carried over, as JQL and as columns.">
 <link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/getting-started">
 <meta property="og:type" content="article">
@@ -32,9 +32,9 @@
 <!-- /site:header -->
 
 <h1>Getting started with Sprint Ledger</h1>
-<p class="byline">Private beta guide &middot; updated 23 September 2026</p>
+<p class="byline">Guide &middot; updated 8 October 2026</p>
 
-<p>Sprint Ledger reconstructs the membership history of every sprint your site has ever run, keeps it current from Jira's own events, and gives you the answer as JQL functions and as issue fields you can put in a column. This page is everything a beta site needs: install, what the first few hours look like, the queries, and how to check the numbers against Jira's Sprint Report.</p>
+<p>Sprint Ledger reconstructs the membership history of every sprint your site has ever run, keeps it current from Jira's own events, and gives you the answer as JQL functions and as issue fields you can put in a column. This page is everything a new site needs: install, what the first few hours look like, the queries, and how to check the numbers against Jira's Sprint Report.</p>
 
 <ol class="toc">
 <li><a href="#install">Install</a></li>
@@ -43,15 +43,15 @@
 <li><a href="#fields">The ten fields</a></li>
 <li><a href="#functions">The nine JQL functions</a></li>
 <li><a href="#gadget">The dashboard gadget</a></li>
-<li><a href="#beta">What is not there yet</a></li>
+<li><a href="#beta">What is built</a></li>
 <li><a href="#accuracy">Checking the numbers against the Sprint Report</a></li>
 <li><a href="#privacy">Privacy, data and uninstalling</a></li>
 <li><a href="#support">Support</a></li>
 </ol>
 
 <h2 id="install">1. Install</h2>
-<p>Your install link is in the invitation email. Open it while signed in to Jira, pick the site, review the permissions and install. It takes about a minute and needs a <strong>Jira administrator</strong>; there is nothing to configure afterwards.</p>
-<p>Sprint Ledger is a Forge app: it runs inside Atlassian's infrastructure, and no issue data leaves your Jira. The consent screen asks to read Jira work, sprints, boards and projects, to write Jira work (used only to fill its own ten read-only fields) and to use Forge app storage.</p>
+<p>Install it from its <a href="https://marketplace.atlassian.com/apps/3329518260">Atlassian Marketplace listing</a> while signed in to Jira: pick the site, review the permissions and install. It takes about a minute and needs a <strong>Jira administrator</strong>; there is nothing to configure afterwards.</p>
+<p>Sprint Ledger is a Forge app: it runs inside Atlassian's infrastructure, and no issue data leaves your Jira. The consent screen asks to read Jira work, sprints, boards, projects and user details, to write Jira work (used only to fill its own ten read-only fields), to report the account IDs it stores to Atlassian's personal data reporting and to use Forge app storage; the <a href="security.html">security page</a> says what each one is used for.</p>
 <p>Installing starts the reconstruction by itself. You do not need to pick projects: every project that has a scrum or team-managed board is tracked by default, and you can turn projects off on the admin page at any time.</p>
 
 <h2 id="first-run">2. The first reconstruction</h2>
@@ -75,7 +75,7 @@
 <p>The fields and the JQL functions start answering when the run reaches its last stage, so treat the admin page saying the run has finished as the moment to start querying. From then on the ledger is kept current live: a drag into or out of a sprint shows up in the fields within a few seconds, a sprint start or completion within about five, and an hourly pass reconciles anything an event missed.</p>
 
 <h2 id="check-two">3. Two things to check first</h2>
-<p>Both are one-time Jira configuration, and both are the usual reason a beta site thinks something is missing.</p>
+<p>Both are one-time Jira configuration, and both are the usual reason a new site thinks something is missing.</p>
 <h3>Share each board's filter with the project</h3>
 <p>Jira shows a board to an app only when the app can see the board's filter. A board with a private filter is invisible, and its sprints will be missing from the ledger. If a board you expected is not in the admin page's table, open <strong>Filters &rarr; the board's filter &rarr; Details &rarr; Edit permissions</strong>, share it with the project (or with everyone logged in), and then press <em>Rebuild every tracked board</em>.</p>
 <h3>Add the fields to team-managed projects</h3>
@@ -150,11 +150,11 @@ issue in sprintsNamed("Dev: 26_*") AND statusCategory != Done</code></pre>
 <p>Add <strong>Sprint scope and say/do (Ledger)</strong> to any dashboard and choose a board, how many closed sprints to show (up to 24), whether to count issues or the board's estimate, and whether to include the active sprint. For each sprint it shows what was committed at the start, what was added after it, what was removed, what was completed and what carried over, with two ratios: say/do, which is completed divided by committed, and scope change, which is added plus removed, divided by committed. Below the table a stacked bar shows what became of each sprint's issues: completed, carried over or removed.</p>
 <p>The gadget offers only the boards Sprint Ledger tracks that you can see, and shows a board's numbers only to people who can see that board. It reloads every 30 minutes, so it also works on a wallboard, and its numbers are the ones the Sprint Report comparison below checks. It reads best in a wide dashboard column; in a narrow one the table's headings wrap.</p>
 
-<h2 id="beta">7. What is not there yet</h2>
-<p>Everything the beta set out to deliver is now built: the reconstruction, the live capture, the hourly reconciliation, the ten fields and the nine functions; the dashboard gadget; the CSV export; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page. Updates arrive by themselves, with no action from you.</p>
+<h2 id="beta">7. What is built</h2>
+<p>Everything the first version set out to deliver is built: the reconstruction, the live capture, the hourly reconciliation, the ten fields and the nine functions; the dashboard gadget; the CSV export; the settings on the admin page (the definition of "done", whether subtasks count, how far back the deep scan reaches, whether account ids are stored, and the hourly API budget); and the project settings page. Updates arrive by themselves, with no action from you.</p>
 
 <h2 id="accuracy">8. Checking the numbers against the Sprint Report</h2>
-<p>The definitions behind every number are on <a href="classification.html">How Sprint Ledger counts</a>. This is the one thing we would like every beta site to do, and it now takes a minute: on the admin page, choose a board under <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> and press <em>Compare the last three closed sprints</em>. The app reads Jira's own report for each sprint and names every issue the two list differently, with the reason where there is a documented one. Tell us what it says, a screenshot is enough, and do it for your busiest boards if you can.</p>
+<p>The definitions behind every number are on <a href="classification.html">How Sprint Ledger counts</a>. It is worth doing once on every site, and it takes a minute: on the admin page, choose a board under <a href="admin.html#accuracy">Compare with Jira's Sprint Report</a> and press <em>Compare the last three closed sprints</em>. The app reads Jira's own report for each sprint and names every issue the two list differently, with the reason where there is a documented one. If it names a difference without a documented reason, tell us what it says; a screenshot is enough.</p>
 <p>To compare a sprint by hand instead, ideally one you remember:</p>
 <ol>
 <li>Open the board, <strong>Reports &rarr; Sprint Report</strong>, and choose the sprint.</li>
@@ -180,10 +180,10 @@ issue in carriedOverFrom("ACME Sprint 41")</code></pre>
 <p>The full <a href="privacy.html">privacy policy</a> is on this site; in short:</p>
 <p>Sprint Ledger stores issue IDs and keys, project IDs, sprint and board metadata, timestamps, the account ID of whoever added or removed an issue, and the values it computes. It does <strong>not</strong> store summaries, descriptions, comments or attachments. Nothing is sent anywhere: there are no external services and no egress, because the app runs on Atlassian's own infrastructure and its data lives in Forge storage attached to your installation, which also means it inherits your site's data residency.</p>
 <p>Account IDs are captured so that an export can say who changed the scope. On the admin page, <em>Store account ids</em> turns that off and <em>Anonymise user ids</em> removes the ones already stored. <em>Delete all ledger data</em> empties the ledger without uninstalling. Uninstalling makes the app's fields disappear from Jira at once, and Atlassian deletes the data that belonged to the installation after a retention period of about a month, as the privacy policy describes.</p>
-<p>The beta is free. When the app is listed, beta sites keep it free for 60 days from the listing date, and sites with up to 10 users stay free after that.</p>
+<p>Sites with up to 10 users use Sprint Ledger free; larger sites subscribe through its <a href="https://marketplace.atlassian.com/apps/3329518260">Marketplace listing</a> after Atlassian's free trial. Sites that installed during the private beta keep every feature without a subscription until 31 December 2026.</p>
 
 <h2 id="support">10. Support</h2>
-<p>The <a href="support.html">support page</a> has the details. Reply to the invitation email, or write to <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>. During the beta you get an answer the same day, from the person who writes the app. Backfill stuck, a number that looks wrong, a field name that reads badly, a query you expected to work: all of it is useful, and the naming in particular is still open.</p>
+<p>The <a href="support.html">support page</a> has the details. Write to <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>; the support page says how fast you get an answer. Backfill stuck, a number that looks wrong, a field name that reads badly, a query you expected to work: all of it is useful.</p>
 
 <!-- site:footer -->
 <footer class="site">

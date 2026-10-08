@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JQL functions | Sprint Ledger</title>
-<meta name="description" content="Reference for Sprint Ledger's nine JQL functions: addedAfterSprintStart, removedFromSprint, committedTo, completedIn, carriedOverFrom, carriedOver, sprintsNamed, openSprintsNamed and futureSprintsNamed, with arguments, patterns, errors and examples.">
+<meta name="description" content="Reference for Sprint Ledger's nine JQL functions: addedAfterSprintStart, removedFromSprint, committedTo, completedIn, carriedOverFrom, carriedOver, sprintsNamed, openSprintsNamed and futureSprintsNamed, with their ledger aliases, arguments, patterns, errors and examples.">
 <link rel="canonical" href="https://damyor.github.io/sprint-ledger-docs/functions">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Sprint Ledger JQL functions">
@@ -47,6 +47,7 @@
 <li><a href="#history">The six history functions</a></li>
 <li><a href="#named">The three name-and-state functions</a></li>
 <li><a href="#errors">Messages in the JQL editor</a></li>
+<li><a href="#same-name">When another app uses the same name</a></li>
 <li><a href="#saved">Saved filters, boards and automation</a></li>
 <li><a href="#examples">More examples</a></li>
 </ol>
@@ -66,6 +67,7 @@
 <tr><td><a href="#futureSprintsNamed"><code>futureSprintsNamed(sprint, board?)</code></a></td><td>The same, for those of the sprints that have not started</td></tr>
 </tbody>
 </table>
+<p>Each function also answers under a second name that starts with <code>ledger</code>: <code>ledgerAddedAfterSprintStart()</code>, <code>ledgerRemovedFromSprint()</code>, <code>ledgerCommittedTo()</code>, <code>ledgerCompletedIn()</code>, <code>ledgerCarriedOverFrom()</code>, <code>ledgerCarriedOver()</code>, <code>ledgerSprintsNamed()</code>, <code>ledgerOpenSprintsNamed()</code> and <code>ledgerFutureSprintsNamed()</code>. They take the same arguments and give the same answers; they are there for a site where another app uses one of the names above (<a href="#same-name">section 6</a>).</p>
 <p>The first six answer from the sprint history the app reconstructs, so they know what happened inside sprints that closed years ago. The last three answer with Jira's own Sprint field, so they are about what is in the sprints now. What "added", "removed", "committed" and "done" mean exactly, and where the answers can differ from Jira's Sprint Report, is on <a href="classification.html">How Sprint Ledger counts</a>.</p>
 
 <h2 id="arguments">2. The sprint and board arguments</h2>
@@ -139,12 +141,17 @@ sprint in openSprints() AND issue in addedAfterSprintStart()</code></pre>
 <tr><td>Sprint Ledger: the sprint history has not been reconstructed yet. Try again in a few minutes.</td><td>The first reconstruction after installing is still running; the <a href="admin.html#first-run">admin page</a> shows its progress.</td></tr>
 </tbody>
 </table>
+<p>These messages appear in Jira's issue search. A script or integration that runs the same query through Jira's REST API (<code>/rest/api/3/search/jql</code>) gets no message: the search answers with no issues. Try a query in the issue search first when a script returns nothing.</p>
 
-<h2 id="saved">6. Saved filters, boards and automation</h2>
+<h2 id="same-name">6. When another app uses the same name</h2>
+<p>Jira lets only one function answer to a name, and when two apps register the same name, Atlassian does not guarantee which of them Jira calls. ScriptRunner's Enhanced Search, for example, documents an <code>addedAfterSprintStart</code> function of its own for its move to Atlassian's Forge platform, with the arguments the other way round.</p>
+<p>Sprint Ledger checks this when it is installed or updated and again every day: it asks Jira to run each of its functions and notes whether Sprint Ledger answered. If another app answered, the <a href="admin.html">admin page</a> says which names are affected. Use the <code>ledger</code> name instead, for example <code>issue in ledgerAddedAfterSprintStart("Sprint 7")</code>, which only Sprint Ledger registers, and change saved filters, board filters and automation rules that use the first name in the same way.</p>
+
+<h2 id="saved">7. Saved filters, boards and automation</h2>
 <p>Jira keeps the answer to a function call and reuses it in saved filters, board filters, gadgets and automation conditions without asking the app again. Sprint Ledger updates those stored answers itself: when a sprint starts or completes, when a sprint is created, renamed or deleted, and once a day for everything. So a saved filter with <code>addedAfterSprintStart()</code> follows the new sprint within seconds of it starting, and a pattern picks up a new matching sprint just as quickly.</p>
 <p>The functions answer for the projects Sprint Ledger tracks; an issue of a project that is turned off on the <a href="admin.html#projects">admin page</a> is never returned. Subtasks are left out unless an administrator has turned on counting them, which is also how Jira's Sprint Report treats them.</p>
 
-<h2 id="examples">7. More examples</h2>
+<h2 id="examples">8. More examples</h2>
 <pre><code>issue in committedTo("ACME Sprint 41") AND issue in removedFromSprint("ACME Sprint 41")
 issue in addedAfterSprintStart("Sprint 7", "ACME board")
 project = ACME AND issue in carriedOver(3) ORDER BY "Sprint carried (Ledger)" DESC

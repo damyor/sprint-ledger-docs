@@ -27,7 +27,7 @@
 <!-- /site:header -->
 
 <h1>Administration</h1>
-<p class="byline">For Jira and project administrators &middot; updated 25 September 2026 (app version 3.0.0)</p>
+<p class="byline">For Jira and project administrators &middot; updated 8 October 2026 (app version 3.2.0)</p>
 
 <p>Sprint Ledger needs almost no administration: installing it starts the reconstruction of every sprint board's history, and from then on it keeps itself current. This page covers what there is to look at and change, and what to do when something looks wrong. Installing and the first hours are in <a href="getting-started.html">Getting started</a>.</p>
 
@@ -105,7 +105,7 @@
 <li><strong>Anonymise user ids</strong> removes every stored account ID and turns their capture off. Counts, dates and JQL answers do not change.</li>
 <li><strong>Delete all ledger data</strong> removes every row the app holds for the site and keeps the settings. The values already written into the ten fields stay on the issues until a new reconstruction rewrites them.</li>
 </ul>
-<p>What is stored, where and for how long is in the <a href="privacy.html">privacy policy</a>. The <em>Licence</em> panel below it shows the site's licence; during the private beta an install needs none.</p>
+<p>What is stored, where and for how long is in the <a href="privacy.html">privacy policy</a>. The <em>Licence</em> panel below it shows the site's Marketplace licence and, for a site that installed during the private beta, the beta's grace, which keeps every feature without a subscription until 31 December 2026.</p>
 
 <h2 id="project-page">6. The project settings page</h2>
 <p><strong>Space settings</strong> (<strong>Project settings</strong> on some sites) &rarr; <strong>Apps</strong> &rarr; <strong>Sprint Ledger</strong>. A project's own administrators can use it without a Jira administrator, as can Jira administrators. It takes 15 to 20 seconds to appear.</p>
@@ -136,8 +136,10 @@
 <dd>A run pauses when the hourly API budget runs low and resumes within the hour, so a progress bar that stands still for a while is normal on a large site. If it has not moved for more than an hour, write to <a href="support.html">support</a> with the time; a stalled run can be resumed without repeating the work done.</dd>
 <dt id="failed">The last reconstruction failed</dt>
 <dd>A failed run starts again by itself once after each app update, which is how a fix reaches you. To start again sooner, press <em>Forget this run</em> and then <em>Rebuild every tracked board</em>; if it fails the same way, send the error shown to <a href="support.html">support</a>.</dd>
-<dt id="function-names">"Another app owns some JQL function names"</dt>
-<dd>A function name can belong to only one app on a Jira site, and Jira lists the names shown as another installed app's. Those names do not reach Sprint Ledger; its fields, its other functions and the gadget are unaffected. Tell <a href="support.html">support</a> which app it is.</dd>
+<dt id="function-names">"Another app answers some JQL function names"</dt>
+<dd>On this site Jira answers the names shown with another app's function of the same name, and Atlassian does not guarantee which app it calls. Use the <code>ledger</code> names the notice gives, such as <code>ledgerAddedAfterSprintStart()</code>: the same functions under names only Sprint Ledger registers. Change saved filters, board filters and automation rules that use the first names in the same way (<a href="functions.html#same-name">When another app uses the same name</a>). Sprint Ledger's fields and the gadget are unaffected.</dd>
+<dt id="function-missing">"Jira does not list some JQL functions"</dt>
+<dd>Jira does not list the names shown on this site, so a query that uses them fails as an unknown function. The fields and the gadget are unaffected, and the page checks again every day. If the notice is still there the next day, tell <a href="support.html">support</a>.</dd>
 <dt id="numbers">A number differs from the Sprint Report</dt>
 <dd>Seven differences are expected; they are listed on <a href="classification.html#sprint-report">How Sprint Ledger counts</a>. <a href="#accuracy">Compare with Jira's Sprint Report</a> tells you which issues differ and why. Anything else is a bug worth reporting.</dd>
 </dl>

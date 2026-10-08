@@ -31,6 +31,22 @@
 
 <p>Updates install on every site by themselves, except 3.0.0, which a Jira administrator approves once. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v3.2.0">3.2.0 &middot; 8 October 2026</h2>
+<ul>
+<li>New: every JQL function also answers under a second name that starts with <code>ledger</code>, such as
+<code>ledgerAddedAfterSprintStart()</code>, with the same arguments and the same answers. Jira does not
+guarantee which app answers when two apps register the same function name, and only Sprint Ledger registers
+the <code>ledger</code> names (<a href="functions.html#same-name">When another app uses the same name</a>).</li>
+<li>New: Sprint Ledger checks when it is installed or updated, and again every day, whether Jira calls its own
+functions, and the <a href="admin.html">admin page</a> names any function that another app answers on the
+site, with the <code>ledger</code> name to use instead.</li>
+<li>Fixed: an issue that leaves a sprint without Jira writing the change into the issue's history, such as an
+issue turned into a subtask of a parent in another sprint, is now recorded as removed from that sprint when it
+left. Before, Sprint Ledger kept it in the sprint, and the hourly check found the same difference every
+hour.</li>
+<li>Changed: two libraries the app is built with are updated for published security advisories.</li>
+</ul>
+
 <h2 id="v3.0.0">3.0.0 &middot; 24 September 2026</h2>
 <ul>
 <li><strong>A Jira administrator approves this update once</strong>, where the site's apps are managed, because it

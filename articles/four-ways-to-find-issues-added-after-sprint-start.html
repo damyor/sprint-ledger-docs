@@ -29,7 +29,7 @@
 <body>
 <nav><a href="../">Sprint Ledger</a> / Articles</nav>
 <h1>Four ways to find issues added after sprint start in Jira Cloud (2026)</h1>
-<p class="byline">Damian Plamenov Yordanov, 7 September 2026</p>
+<p class="byline">Damian Plamenov Yordanov, 7 September 2026, updated 8 October 2026</p>
 <p>Every scrum master has asked it at some point in a review: <em>what got added after we committed?</em> Jira knows the answer, because every change to the Sprint field is in the issue history, but for eight years it has only shown it one way: the asterisk next to an issue in the Sprint Report. The request to make it a JQL query, <a href="https://jira.atlassian.com/browse/JRACLOUD-75868">JRACLOUD-75868</a>, has more than 1,400 votes and is still "Gathering Interest". Here are the four ways teams answer the question today, what each one can and cannot do, and when each is enough. Disclosure up front: I am building the fourth one.</p>
 <h2>1. Read the Sprint Report by hand</h2>
 <p>Open the board, Reports, Sprint Report, pick the sprint. Issues added after the sprint started carry an asterisk; the footnote says so. "Issues Removed From Sprint" is its own section at the bottom, and the completed and not-completed lists are above it.</p>
@@ -54,7 +54,7 @@
 <li><strong>Read-only fields</strong>: Sprint scope (Committed, Added after start, Removed, Added then removed), Sprint added, Sprint removed, Sprint carried, Sprint original, Sprint start, Sprint planned end, Sprint completed, and Sprint membership (every sprint the issue has been in). They show as columns, sort, and are usable in JQL like <code>"Sprint start (Ledger)" &gt;= 2026-07-01</code>.</li>
 <li><strong>A gadget and CSV export</strong>: committed, added, removed, completed, carried, say/do and scope change per sprint, in issues or story points, with an issue-level export that says who added or removed what and when.</li>
 </ul>
-<p>It is retroactive for every sprint the site has run, it follows the Sprint Report's definitions (so the numbers match, and the differences are documented), and it runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is in private beta now and will be on the Marketplace this autumn, priced so that a 100-user site pays about $50 a month and sites with up to 10 users pay nothing.</p>
+<p>It is retroactive for every sprint the site has run, it follows the Sprint Report's definitions (so the numbers match, and the differences are documented), and it runs entirely inside Atlassian's infrastructure, so no issue data leaves Jira. It is on the <a href="https://marketplace.atlassian.com/apps/3329518260">Atlassian Marketplace</a>, priced so that a 100-user site pays about $50 a month and sites with up to 10 users pay nothing.</p>
 <figure style="margin:1.5rem 0">
 <img src="../media/sprint-ledger-jql.gif" alt="The Jira issue navigator running issue in addedAfterSprintStart(&quot;SLT Sprint 2&quot;) with nine results, then the Sprint scope, Added to sprint, Sprint start, Sprint end and Sprints carried columns, then a query over the Sprint start and Sprint scope fields returning 40 issues" width="960" height="765" style="max-width:100%;height:auto;border:1px solid #dfe1e6;border-radius:4px" loading="lazy">
 <figcaption style="font-size:0.9rem;color:#6b778c">Thirty seconds on the demo site: a function in the JQL bar and its results, the Ledger columns, then a second query over the fields alone.</figcaption>
@@ -72,7 +72,7 @@
 <tr><td>Cost for 100 users</td><td>free</td><td>free (rule runs)</td><td>about $175 a month</td><td>about $50 a month</td></tr>
 <tr><td>Setup</td><td>none</td><td>an afternoon</td><td>install</td><td>install and wait for the backfill</td></tr>
 </tbody></table>
-<p>If you look at one sprint at a time, the Sprint Report is enough. If you only need the active sprint from today on and are comfortable with automation, the rule is enough. If you already own JQL Search Extensions, use it. If you want the whole history as queries and columns, or you report across teams, that is the gap Sprint Ledger is meant to fill, and I would like beta sites that will tell me where it is wrong: <a href="https://forms.gle/9z8uFRAjMWzuGpSg9">https://forms.gle/9z8uFRAjMWzuGpSg9</a>.</p>
+<p>If you look at one sprint at a time, the Sprint Report is enough. If you only need the active sprint from today on and are comfortable with automation, the rule is enough. If you already own JQL Search Extensions, use it. If you want the whole history as queries and columns, or you report across teams, that is the gap Sprint Ledger is meant to fill, and I would like to hear where it is wrong: <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>.</p>
 <p>Questions and corrections about the first three methods are welcome in the comments; I will keep the table current.</p>
 <footer>Sprint Ledger is an independent app and is not affiliated with Atlassian. Corrections: <a href="mailto:support@dyordanov.com">support@dyordanov.com</a>.</footer>
 </body>
