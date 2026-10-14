@@ -31,6 +31,18 @@
 
 <p>Updates install on every site by themselves, except 3.0.0, which a Jira administrator approves once. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v3.3.0">3.3.0 &middot; 14 October 2026</h2>
+<ul>
+<li>Fixed: the check that Jira calls Sprint Ledger's own JQL functions now runs in the background a minute
+after Sprint Ledger is installed or updated, instead of during the installation itself, where on a new
+site it could run out of time and make Jira deliver the installation to the app again. Nothing you see
+depended on it, and the daily check was not affected.</li>
+<li>Fixed: the <a href="admin.html">admin page</a> no longer names one of Sprint Ledger's functions as
+answered by another app when Jira had only answered the check before Sprint Ledger's function ran, or could
+not process the check at that moment. A function is named only when two checks in a row are answered by
+another app (<a href="functions.html#same-name">When another app uses the same name</a>).</li>
+</ul>
+
 <h2 id="v3.2.0">3.2.0 &middot; 8 October 2026</h2>
 <ul>
 <li>New: every JQL function also answers under a second name that starts with <code>ledger</code>, such as
