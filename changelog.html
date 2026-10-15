@@ -31,6 +31,15 @@
 
 <p>Updates install on every site by themselves, except 3.0.0, which a Jira administrator approves once. The version a site runs is shown at the top of the <a href="admin.html#admin-page">admin page</a>.</p>
 
+<h2 id="v3.4.0">3.4.0 &middot; 15 October 2026</h2>
+<ul>
+<li>Fixed: when Jira stops showing Sprint Ledger the issues of a sprint, as it does while their project is
+in the trash or when the app has lost its permission on the project, the hourly check no longer tries to
+bring that sprint up to date every hour. It looks again once a day, or as soon as Jira's count for the
+sprint changes, and keeps everything it already holds, so a project restored from the trash carries on
+where it stopped (<a href="faq.html#trash">FAQ</a>).</li>
+</ul>
+
 <h2 id="v3.3.0">3.3.0 &middot; 14 October 2026</h2>
 <ul>
 <li>Fixed: the check that Jira calls Sprint Ledger's own JQL functions now runs in the background a minute
